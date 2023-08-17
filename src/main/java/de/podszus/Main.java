@@ -1,7 +1,6 @@
 package de.podszus;
 
 import javafx.application.Application;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -11,7 +10,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -133,7 +131,7 @@ public class Main extends Application {
 
 
         VBox zustandspanel = new VBox();
-        ArrayList<HBox> ColorPickerPanels = new ArrayList<HBox>();
+        ArrayList<HBox> ColorPickerPanels = new ArrayList<>();
 
         //Anzahl der ColorPicker
         int anzahl = 2;
@@ -176,7 +174,7 @@ public class Main extends Application {
 
         }
 
-
+        /*
         class ColorPickerHBox extends Node {
         ArrayList<RadioButton> radioButtons;
         ArrayList<ColorPicker> colorPickers;
@@ -191,6 +189,6 @@ public class Main extends Application {
         }
 
 
-        }
+        } */
     }
 
