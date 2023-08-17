@@ -1,14 +1,20 @@
 package de.podszus;
 
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 
 public class Main extends Application {
@@ -20,19 +26,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        VBox Hauptbox = new VBox();
 
+        VBox hauptbox = new VBox();
 
 
         final MenuBar menuBar = new MenuBar();
-        SeparatorMenuItem sep = new SeparatorMenuItem();
-        SeparatorMenuItem sep2 = new SeparatorMenuItem();
-        SeparatorMenuItem sep3 = new SeparatorMenuItem();
-        SeparatorMenuItem sep4 = new SeparatorMenuItem();
-
-
-        /*Icons für die Menues*/
-        //ImageView iconNeu = new ImageView(resources/New24.gif);
 
         /* Erzeugen des Ausklappbaren Menues Automat*/
         Menu menuAutomat = new Menu("_Automat");
@@ -46,8 +44,9 @@ public class Main extends Application {
         itemEditor.setAccelerator(KeyCombination.keyCombination("SHORTCUT + E"));
         MenuItem itemBeenden = new MenuItem("Beenden");
         itemBeenden.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Q"));
+        menuAutomat.getItems().addAll(itemNeu, itemLaden,new SeparatorMenuItem(), itemEditor,new SeparatorMenuItem(), itemBeenden);
 
-        menuAutomat.getItems().addAll(itemNeu, itemLaden,sep, itemEditor,sep2, itemBeenden);
+
         /* Erzeugen des Ausklappbaren Menues Population*/
         Menu menuPopulation = new Menu("_Population");
         MenuItem itemGroesseAendern = new MenuItem("Größe ändern");
@@ -79,7 +78,7 @@ public class Main extends Application {
         itemladenDeserialisieren.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + S"));
         submenueLaden.getItems().addAll(itemladenXML,itemladenDeserialisieren);
 
-        menuPopulation.getItems().addAll(itemGroesseAendern, itemLoeschen,itemErzeugen, itemTorus,sep3, itemZoomIn, itemZoomOut,sep4,submenueSpeichern, submenueLaden);
+        menuPopulation.getItems().addAll(itemGroesseAendern, itemLoeschen,itemErzeugen, itemTorus,new SeparatorMenuItem(), itemZoomIn, itemZoomOut,new SeparatorMenuItem(),submenueSpeichern, submenueLaden);
 
         /* Erzeugen des Ausklappbaren Menues Simulation*/
         Menu menuSimulation = new Menu("_Simulation");
@@ -91,15 +90,12 @@ public class Main extends Application {
         MenuItem itemStopp = new MenuItem("Stopp");
         itemStopp.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + O"));
         itemStopp.setGraphic(new ImageView(new Image("Stop16.gif")));
-
         menuSimulation.getItems().addAll(itemSchritt, itemStart, itemStopp);
-
         menuBar.getMenus().addAll(menuAutomat,menuPopulation,menuSimulation);
 
 
 
         //Toolbar
-
         ToolBar toolbar = new ToolBar();
         Button buttonneuerAutomat = new Button();
         buttonneuerAutomat.setGraphic(new ImageView(new Image("New24.gif")));
@@ -128,37 +124,72 @@ public class Main extends Application {
         sliderSchneller.setShowTickMarks(true);
         sliderSchneller.setMajorTickUnit(50);
         sliderSchneller.setMinorTickCount(1);
-
         toolbar.getItems().addAll(buttonneuerAutomat,buttonAutomatLaden,buttonGroesserePopulation,buttonZustandNull,buttonZufaelligePopulation,buttonTorus,buttonDrucken,buttonZoomIn,buttonZoomOut,buttonStart,buttonStop,sliderSchneller);
 
-        BorderPane borderpane = new BorderPane();
-        VBox zustandspanel  = createZustandspanel(2);
 
-        Label meldungsLabel = new Label("Herzlich Willkommen");
-        meldungsLabel.maxHeight(25);
+
+        //innereBox die die Beiden Scrollpanes für die ColorPicker VBOX und die Region beinhaltet
+        HBox innereBox = new HBox(5);
+
+
+        VBox zustandspanel = new VBox();
+        ArrayList<HBox> ColorPickerPanels = new ArrayList<HBox>();
+
+        //Anzahl der ColorPicker
+        int anzahl = 2;
+        for (int i = 0; i < anzahl; i++){
+            HBox temp = createZustandspanel();
+            ColorPickerPanels.add(temp);
+            zustandspanel.getChildren().add(temp);
+
+
+        }
+
+
+
+        ScrollPane scrollPanelinks = new ScrollPane(zustandspanel);
+
+        //Region, die die konkrete Simulation haust
         Region populationspanel = new Region();
-        populationspanel.setPrefHeight(650);
-        populationspanel.setBackground(Background.fill(Color.RED));
-        borderpane.setBottom(meldungsLabel);
-        borderpane.setLeft(zustandspanel);
-        borderpane.setCenter(populationspanel);
-        Hauptbox.getChildren().addAll(menuBar,toolbar,borderpane);
+        ScrollPane scrollPanerechts = new ScrollPane(populationspanel);
+        scrollPanerechts.setPrefSize(1100,600);
+        innereBox.getChildren().addAll(scrollPanelinks,scrollPanerechts);
+
+
+        VBox.setVgrow(scrollPanerechts, Priority.ALWAYS);
+        Label meldungsLabel = new Label("Herzlich Willkommen");
+        meldungsLabel.setMaxHeight(30);
+
+        hauptbox.getChildren().addAll(menuBar,toolbar,innereBox,meldungsLabel);
         primaryStage.setTitle("CAS-Simulator");
-        primaryStage.setScene(new Scene(Hauptbox, 1280, 720));
+        primaryStage.setScene(new Scene(hauptbox , 1280, 720));
         primaryStage.show();
     }
 
-        public VBox createZustandspanel(int anzahl){
-            int i = anzahl;
-            VBox zustandspanel = new VBox(5);
-            for (int j = 0; j < i; j++){
-                HBox buttonmenge1 = new HBox(10);
-                RadioButton aktivierungsbutton1 = new RadioButton();
-                ColorPicker farbwaehler1 = new ColorPicker(Color.color(Math.random(),Math.random(),Math.random()));
-                buttonmenge1.getChildren().addAll(aktivierungsbutton1,farbwaehler1);
-                zustandspanel.getChildren().addAll(buttonmenge1);
-            }
-            return zustandspanel;
+    public HBox createZustandspanel(){
+        HBox hBox = new HBox(10);
+           RadioButton radioButton = new RadioButton();
+           ColorPicker colorPicker = new ColorPicker();
+           hBox.getChildren().addAll(radioButton, colorPicker);
+        return hBox;
+
+
+        }
+
+
+        class ColorPickerHBox extends Node {
+        ArrayList<RadioButton> radioButtons;
+        ArrayList<ColorPicker> colorPickers;
+
+
+        ColorPickerHBox(){
+            HBox hBox = new HBox(10);
+            RadioButton radioButton = new RadioButton();
+            ColorPicker colorPicker = new ColorPicker(Color.color(Math.random(),Math.random(),Math.random()));
+            hBox.getChildren().addAll(radioButton,colorPicker);
+
+        }
+
 
         }
     }
