@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -96,33 +97,45 @@ public class Main extends Application {
         //Toolbar
         ToolBar toolbar = new ToolBar();
         Button buttonneuerAutomat = new Button();
+        buttonneuerAutomat.setTooltip(new Tooltip("Neuer Automat"));
         buttonneuerAutomat.setGraphic(new ImageView(new Image("New24.gif")));
-        Button  buttonAutomatLaden= new Button();
+        Button buttonAutomatLaden= new Button();
+        buttonAutomatLaden.setTooltip(new Tooltip("Automat Laden"));
         buttonAutomatLaden.setGraphic(new ImageView(new Image("Load24.gif")));
         Button buttonGroesserePopulation = new Button();
+        buttonGroesserePopulation.setTooltip(new Tooltip("Population vergroessern"));
         buttonGroesserePopulation.setGraphic(new ImageView(new Image("Size24.gif")));
         Button buttonZustandNull = new Button();
+        buttonZustandNull.setTooltip(new Tooltip("Alle Zellen auf Zustand 0"));
+
         buttonZustandNull.setGraphic(new ImageView(new Image("Delete24.gif")));
         Button buttonZufaelligePopulation = new Button();
+        buttonZufaelligePopulation.setTooltip(new Tooltip("Zufällige Population"));
         buttonZufaelligePopulation.setGraphic(new ImageView(new Image("Random24.gif")));
         ToggleButton buttonTorus = new ToggleButton();
+        buttonTorus.setTooltip(new Tooltip("Torus"));
         buttonTorus.setGraphic(new ImageView(new Image("Torus24.gif")));
         Button buttonDrucken = new Button();
+        buttonDrucken.setTooltip(new Tooltip("Drucken"));
         buttonDrucken.setGraphic(new ImageView(new Image("Print24.gif")));
         Button buttonZoomIn = new Button();
+        buttonZoomIn.setTooltip(new Tooltip("Zoom In"));
         buttonZoomIn.setGraphic(new ImageView(new Image("ZoomIn24.gif")));
         Button buttonZoomOut = new Button();
+        buttonZoomOut.setTooltip(new Tooltip("Zoom Out"));
         buttonZoomOut.setGraphic(new ImageView(new Image("ZoomOut24.gif")));
         Button buttonStart = new Button();
+        buttonStart.setTooltip(new Tooltip("Start"));
         buttonStart.setGraphic(new ImageView(new Image("Start24.gif")));
         Button buttonStop = new Button();
+        buttonStop.setTooltip(new Tooltip("Stopp"));
         buttonStop.setGraphic(new ImageView(new Image("Stop24.gif")));
         Slider sliderSchneller  = new Slider(0,100,100);
         sliderSchneller.setShowTickLabels(true);
         sliderSchneller.setShowTickMarks(true);
         sliderSchneller.setMajorTickUnit(50);
         sliderSchneller.setMinorTickCount(1);
-        toolbar.getItems().addAll(buttonneuerAutomat,buttonAutomatLaden,buttonGroesserePopulation,buttonZustandNull,buttonZufaelligePopulation,buttonTorus,buttonDrucken,buttonZoomIn,buttonZoomOut,buttonStart,buttonStop,sliderSchneller);
+        toolbar.getItems().addAll(buttonneuerAutomat,buttonAutomatLaden,new Separator(),buttonGroesserePopulation,buttonZustandNull,buttonZufaelligePopulation,buttonTorus,buttonDrucken,new Separator(),buttonZoomIn,buttonZoomOut,new Separator(),buttonStart,buttonStop,new Separator(),sliderSchneller);
 
 
 
@@ -131,17 +144,18 @@ public class Main extends Application {
 
 
         VBox zustandspanel = new VBox();
-        ArrayList<HBox> ColorPickerPanels = new ArrayList<>();
+        ArrayList<ColorPickerHBox> ColorPickerPanels = new ArrayList<>();
+
+
 
         //Anzahl der ColorPicker
+
         int anzahl = 2;
-        for (int i = 0; i < anzahl; i++){
-            HBox temp = createZustandspanel();
-            ColorPickerPanels.add(temp);
-            zustandspanel.getChildren().add(temp);
-
-
+        for (int i = 1; i <= anzahl; i++){
+           ColorPickerHBox farbwaehler = new ColorPickerHBox(zustandspanel, i);
+           ColorPickerPanels.add(farbwaehler);
         }
+
 
 
 
@@ -164,31 +178,35 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    /*
     public HBox createZustandspanel(){
         HBox hBox = new HBox(10);
+
            RadioButton radioButton = new RadioButton();
-           ColorPicker colorPicker = new ColorPicker();
+           ColorPicker colorPicker = new ColorPicker(Color.color(Math.random(),Math.random(),Math.random()));
            hBox.getChildren().addAll(radioButton, colorPicker);
+
         return hBox;
 
 
-        }
-
-        /*
-        class ColorPickerHBox extends Node {
-        ArrayList<RadioButton> radioButtons;
-        ArrayList<ColorPicker> colorPickers;
+        }*/
 
 
-        ColorPickerHBox(){
+        //Klasse, die in die Übergebene VBOX eine HBox einfügt, in der ein RadioButton und ein ColorPicker ist.
+     static   class ColorPickerHBox  {
+
+
+
+        ColorPickerHBox(VBox vBox, int instanziierungen){
+            String nummer = Integer.toString(instanziierungen);
             HBox hBox = new HBox(10);
-            RadioButton radioButton = new RadioButton();
+            RadioButton radioButton = new RadioButton(nummer);
             ColorPicker colorPicker = new ColorPicker(Color.color(Math.random(),Math.random(),Math.random()));
             hBox.getChildren().addAll(radioButton,colorPicker);
-
+            vBox.getChildren().add(hBox);
         }
 
 
-        } */
+        }
     }
 
