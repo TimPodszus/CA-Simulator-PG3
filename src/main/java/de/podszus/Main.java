@@ -43,7 +43,7 @@ public class Main extends Application {
         itemEditor.setAccelerator(KeyCombination.keyCombination("SHORTCUT + E"));
         MenuItem itemBeenden = new MenuItem("Beenden");
         itemBeenden.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Q"));
-        menuAutomat.getItems().addAll(itemNeu, itemLaden,new SeparatorMenuItem(), itemEditor,new SeparatorMenuItem(), itemBeenden);
+        menuAutomat.getItems().addAll(itemNeu, itemLaden, new SeparatorMenuItem(), itemEditor, new SeparatorMenuItem(), itemBeenden);
 
 
         /* Erzeugen des Ausklappbaren Menues Population*/
@@ -67,7 +67,7 @@ public class Main extends Application {
         itemspeichernXML.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + X"));
         MenuItem itemspeichernSerialisieren = new MenuItem("Serialisieren");
         itemspeichernSerialisieren.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + S"));
-        submenueSpeichern.getItems().addAll(itemspeichernXML,itemspeichernSerialisieren);
+        submenueSpeichern.getItems().addAll(itemspeichernXML, itemspeichernSerialisieren);
 
         //Submenue Laden
         Menu submenueLaden = new Menu("Laden");
@@ -75,9 +75,9 @@ public class Main extends Application {
         itemladenXML.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + X"));
         MenuItem itemladenDeserialisieren = new MenuItem("Serialisieren");
         itemladenDeserialisieren.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + S"));
-        submenueLaden.getItems().addAll(itemladenXML,itemladenDeserialisieren);
+        submenueLaden.getItems().addAll(itemladenXML, itemladenDeserialisieren);
 
-        menuPopulation.getItems().addAll(itemGroesseAendern, itemLoeschen,itemErzeugen, itemTorus,new SeparatorMenuItem(), itemZoomIn, itemZoomOut,new SeparatorMenuItem(),submenueSpeichern, submenueLaden);
+        menuPopulation.getItems().addAll(itemGroesseAendern, itemLoeschen, itemErzeugen, itemTorus, new SeparatorMenuItem(), itemZoomIn, itemZoomOut, new SeparatorMenuItem(), submenueSpeichern, submenueLaden);
 
         /* Erzeugen des Ausklappbaren Menues Simulation*/
         Menu menuSimulation = new Menu("_Simulation");
@@ -90,8 +90,7 @@ public class Main extends Application {
         itemStopp.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + O"));
         itemStopp.setGraphic(new ImageView(new Image("Stop16.gif")));
         menuSimulation.getItems().addAll(itemSchritt, itemStart, itemStopp);
-        menuBar.getMenus().addAll(menuAutomat,menuPopulation,menuSimulation);
-
+        menuBar.getMenus().addAll(menuAutomat, menuPopulation, menuSimulation);
 
 
         //Toolbar
@@ -99,7 +98,7 @@ public class Main extends Application {
         Button buttonneuerAutomat = new Button();
         buttonneuerAutomat.setTooltip(new Tooltip("Neuer Automat"));
         buttonneuerAutomat.setGraphic(new ImageView(new Image("New24.gif")));
-        Button buttonAutomatLaden= new Button();
+        Button buttonAutomatLaden = new Button();
         buttonAutomatLaden.setTooltip(new Tooltip("Automat Laden"));
         buttonAutomatLaden.setGraphic(new ImageView(new Image("Load24.gif")));
         Button buttonGroesserePopulation = new Button();
@@ -130,13 +129,12 @@ public class Main extends Application {
         Button buttonStop = new Button();
         buttonStop.setTooltip(new Tooltip("Stopp"));
         buttonStop.setGraphic(new ImageView(new Image("Stop24.gif")));
-        Slider sliderSchneller  = new Slider(0,100,100);
+        Slider sliderSchneller = new Slider(0, 100, 100);
         sliderSchneller.setShowTickLabels(true);
         sliderSchneller.setShowTickMarks(true);
         sliderSchneller.setMajorTickUnit(50);
         sliderSchneller.setMinorTickCount(1);
-        toolbar.getItems().addAll(buttonneuerAutomat,buttonAutomatLaden,new Separator(),buttonGroesserePopulation,buttonZustandNull,buttonZufaelligePopulation,buttonTorus,buttonDrucken,new Separator(),buttonZoomIn,buttonZoomOut,new Separator(),buttonStart,buttonStop,new Separator(),sliderSchneller);
-
+        toolbar.getItems().addAll(buttonneuerAutomat, buttonAutomatLaden, new Separator(), buttonGroesserePopulation, buttonZustandNull, buttonZufaelligePopulation, buttonTorus, buttonDrucken, new Separator(), buttonZoomIn, buttonZoomOut, new Separator(), buttonStart, buttonStop, new Separator(), sliderSchneller);
 
 
         //innereBox die die Beiden Scrollpanes für die ColorPicker VBOX und die Region beinhaltet
@@ -147,16 +145,13 @@ public class Main extends Application {
         ArrayList<ColorPickerHBox> ColorPickerPanels = new ArrayList<>();
 
 
-
         //Anzahl der ColorPicker
 
         int anzahl = 2;
-        for (int i = 1; i <= anzahl; i++){
-           ColorPickerHBox farbwaehler = new ColorPickerHBox(zustandspanel, i);
-           ColorPickerPanels.add(farbwaehler);
+        for (int i = 1; i <= anzahl; i++) {
+            ColorPickerHBox farbwaehler = new ColorPickerHBox(zustandspanel, i);
+            ColorPickerPanels.add(farbwaehler);
         }
-
-
 
 
         ScrollPane scrollPanelinks = new ScrollPane(zustandspanel);
@@ -164,49 +159,35 @@ public class Main extends Application {
         //Region, die die konkrete Simulation haust
         Region populationspanel = new Region();
         ScrollPane scrollPanerechts = new ScrollPane(populationspanel);
-        scrollPanerechts.setPrefSize(1100,600);
-        innereBox.getChildren().addAll(scrollPanelinks,scrollPanerechts);
+        scrollPanerechts.setPrefSize(1100, 600);
+        innereBox.getChildren().addAll(scrollPanelinks, scrollPanerechts);
 
 
         VBox.setVgrow(scrollPanerechts, Priority.ALWAYS);
         Label meldungsLabel = new Label("Herzlich Willkommen");
         meldungsLabel.setMaxHeight(30);
 
-        hauptbox.getChildren().addAll(menuBar,toolbar,innereBox,meldungsLabel);
+        hauptbox.getChildren().addAll(menuBar, toolbar, innereBox, meldungsLabel);
         primaryStage.setTitle("CAS-Simulator");
-        primaryStage.setScene(new Scene(hauptbox , 1280, 720));
+        primaryStage.setScene(new Scene(hauptbox, 1280, 720));
         primaryStage.show();
     }
 
-    /*
-    public HBox createZustandspanel(){
-        HBox hBox = new HBox(10);
 
-           RadioButton radioButton = new RadioButton();
-           ColorPicker colorPicker = new ColorPicker(Color.color(Math.random(),Math.random(),Math.random()));
-           hBox.getChildren().addAll(radioButton, colorPicker);
-
-        return hBox;
+    //Klasse, die in die Übergebene VBOX eine HBox einfügt, in der ein RadioButton und ein ColorPicker ist.
+    static class ColorPickerHBox {
 
 
-        }*/
-
-
-        //Klasse, die in die Übergebene VBOX eine HBox einfügt, in der ein RadioButton und ein ColorPicker ist.
-     static   class ColorPickerHBox  {
-
-
-
-        ColorPickerHBox(VBox vBox, int instanziierungen){
+        ColorPickerHBox(VBox vBox, int instanziierungen) {
             String nummer = Integer.toString(instanziierungen);
             HBox hBox = new HBox(10);
             RadioButton radioButton = new RadioButton(nummer);
-            ColorPicker colorPicker = new ColorPicker(Color.color(Math.random(),Math.random(),Math.random()));
-            hBox.getChildren().addAll(radioButton,colorPicker);
+            ColorPicker colorPicker = new ColorPicker(Color.color(Math.random(), Math.random(), Math.random()));
+            hBox.getChildren().addAll(radioButton, colorPicker);
             vBox.getChildren().add(hBox);
         }
 
 
-        }
     }
+}
 
