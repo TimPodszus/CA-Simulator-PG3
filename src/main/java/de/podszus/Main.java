@@ -10,7 +10,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -27,53 +26,51 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         VBox hauptbox = new VBox();
-
-
         final MenuBar menuBar = new MenuBar();
 
         /* Erzeugen des Ausklappbaren Menues Automat*/
         Menu menuAutomat = new Menu("_Automat");
-        MenuItem itemNeu = new MenuItem("Neu...");
+        MenuItem itemNeu = new MenuItem("_Neu...");
         itemNeu.setAccelerator(KeyCombination.keyCombination("SHORTCUT + N"));
         itemNeu.setGraphic(new ImageView(new Image("New16.gif")));
-        MenuItem itemLaden = new MenuItem("Laden...");
+        MenuItem itemLaden = new MenuItem("_Laden...");
         itemLaden.setAccelerator(KeyCombination.keyCombination("SHORTCUT + L"));
         itemLaden.setGraphic(new ImageView(new Image("Load16.gif")));
-        MenuItem itemEditor = new MenuItem("Editor");
+        MenuItem itemEditor = new MenuItem("_Editor");
         itemEditor.setAccelerator(KeyCombination.keyCombination("SHORTCUT + E"));
-        MenuItem itemBeenden = new MenuItem("Beenden");
+        MenuItem itemBeenden = new MenuItem("_Beenden");
         itemBeenden.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Q"));
         menuAutomat.getItems().addAll(itemNeu, itemLaden, new SeparatorMenuItem(), itemEditor, new SeparatorMenuItem(), itemBeenden);
 
 
         /* Erzeugen des Ausklappbaren Menues Population*/
         Menu menuPopulation = new Menu("_Population");
-        MenuItem itemGroesseAendern = new MenuItem("Größe ändern");
+        MenuItem itemGroesseAendern = new MenuItem("_Größe ändern");
         itemGroesseAendern.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + G"));
-        MenuItem itemLoeschen = new MenuItem("Löschen");
+        MenuItem itemLoeschen = new MenuItem("_Löschen");
         itemLoeschen.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + L"));
-        MenuItem itemErzeugen = new MenuItem("Erzeugen");
+        MenuItem itemErzeugen = new MenuItem("_Erzeugen");
         itemErzeugen.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + Z"));
-        CheckMenuItem itemTorus = new CheckMenuItem("Torus");
+        CheckMenuItem itemTorus = new CheckMenuItem("_Torus");
         itemTorus.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + T"));
-        MenuItem itemZoomIn = new MenuItem("Vergrößern");
+        MenuItem itemZoomIn = new MenuItem("Zoom _In");
         itemZoomIn.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + I"));
-        MenuItem itemZoomOut = new MenuItem("Verkleinern");
+        MenuItem itemZoomOut = new MenuItem("Zoom _Out");
         itemZoomOut.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + O"));
 
         //Submenü Speichern
-        Menu submenueSpeichern = new Menu("Speichern");
-        MenuItem itemspeichernXML = new MenuItem("XML");
+        Menu submenueSpeichern = new Menu("_Speichern");
+        MenuItem itemspeichernXML = new MenuItem("_XML");
         itemspeichernXML.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + X"));
-        MenuItem itemspeichernSerialisieren = new MenuItem("Serialisieren");
+        MenuItem itemspeichernSerialisieren = new MenuItem("_Serialisieren");
         itemspeichernSerialisieren.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + S"));
         submenueSpeichern.getItems().addAll(itemspeichernXML, itemspeichernSerialisieren);
 
         //Submenue Laden
-        Menu submenueLaden = new Menu("Laden");
-        MenuItem itemladenXML = new MenuItem("XML");
+        Menu submenueLaden = new Menu("L_aden");
+        MenuItem itemladenXML = new MenuItem("_XML");
         itemladenXML.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + X"));
-        MenuItem itemladenDeserialisieren = new MenuItem("Serialisieren");
+        MenuItem itemladenDeserialisieren = new MenuItem("_Serialisieren");
         itemladenDeserialisieren.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + S"));
         submenueLaden.getItems().addAll(itemladenXML, itemladenDeserialisieren);
 
@@ -81,12 +78,12 @@ public class Main extends Application {
 
         /* Erzeugen des Ausklappbaren Menues Simulation*/
         Menu menuSimulation = new Menu("_Simulation");
-        MenuItem itemSchritt = new MenuItem("Schritt");
+        MenuItem itemSchritt = new MenuItem("Schri_tt");
         itemSchritt.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Alt + S"));
-        MenuItem itemStart = new MenuItem("Start");
+        MenuItem itemStart = new MenuItem("_Start");
         itemStart.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Alt + A"));
         itemStart.setGraphic(new ImageView(new Image("Start16.gif")));
-        MenuItem itemStopp = new MenuItem("Stopp");
+        MenuItem itemStopp = new MenuItem("Sto_pp");
         itemStopp.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + O"));
         itemStopp.setGraphic(new ImageView(new Image("Stop16.gif")));
         menuSimulation.getItems().addAll(itemSchritt, itemStart, itemStopp);
@@ -144,15 +141,12 @@ public class Main extends Application {
         VBox zustandspanel = new VBox();
         ArrayList<ColorPickerHBox> ColorPickerPanels = new ArrayList<>();
 
-
         //Anzahl der ColorPicker
-
         int anzahl = 2;
         for (int i = 1; i <= anzahl; i++) {
             ColorPickerHBox farbwaehler = new ColorPickerHBox(zustandspanel, i);
             ColorPickerPanels.add(farbwaehler);
         }
-
 
         ScrollPane scrollPanelinks = new ScrollPane(zustandspanel);
 
@@ -174,20 +168,8 @@ public class Main extends Application {
     }
 
 
-    //Klasse, die in die Übergebene VBOX eine HBox einfügt, in der ein RadioButton und ein ColorPicker ist.
-    static class ColorPickerHBox {
-
-
-        ColorPickerHBox(VBox vBox, int instanziierungen) {
-            String nummer = Integer.toString(instanziierungen);
-            HBox hBox = new HBox(10);
-            RadioButton radioButton = new RadioButton(nummer);
-            ColorPicker colorPicker = new ColorPicker(Color.color(Math.random(), Math.random(), Math.random()));
-            hBox.getChildren().addAll(radioButton, colorPicker);
-            vBox.getChildren().add(hBox);
-        }
 
 
     }
-}
+
 
