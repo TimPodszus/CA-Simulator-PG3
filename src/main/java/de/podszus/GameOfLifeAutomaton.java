@@ -12,6 +12,7 @@ public class GameOfLifeAutomaton extends Automaton {
     }
     protected Cell transform(Cell cell, Cell[] neighbors){
         int livingneighbors = 0;
+        Cell outputCell = new Cell(cell);
         for (int i = 0; i < neighbors.length; i++) {
             if (neighbors[i].getState() == 1){
                 livingneighbors++;
@@ -21,16 +22,17 @@ public class GameOfLifeAutomaton extends Automaton {
 
         if (cell.getState() ==1 ){
             if (livingneighbors < 2 || livingneighbors > 3 ){
-                cell.setState(0);
+
+                outputCell.setState(0);
             }
         } else if (cell.getState() == 0) {
             if (livingneighbors == 3 ){
-                cell.setState(1);
+                outputCell.setState(1);
             }
 
         }
 
 
-        return cell;
+        return outputCell;
     }
 }

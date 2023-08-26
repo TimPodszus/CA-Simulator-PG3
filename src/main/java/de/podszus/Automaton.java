@@ -36,6 +36,7 @@ public abstract class Automaton {
         this.numberofStates = numberOfStates;
         this.isMooreNeighborHood = isMooreNeighborHood;
         this.isTorus = isTorus;
+        this.cells = new Cell[rows][columns];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 this.cells[i][j] = new Cell(0);
@@ -184,8 +185,8 @@ public abstract class Automaton {
      */
     public void setState(int row, int column, int state) {
         if (this.cells[row][column].getState() != state) {
-            this.cells[row][column].setState(state);
-        }
+        getCell(row,column).setState(state);
+               }
     }
 
     /**
@@ -219,90 +220,101 @@ public abstract class Automaton {
      *                   weitergeleitet
      */
     public void nextGeneration() throws Throwable {
+        Cell[][] nextGeneration = new Cell[rows][columns];
+
         if (this.isTorus) {
             if (this.isMooreNeighborHood) {
                 for (int r = 0; r < this.rows; r++) {
                     for (int c = 0; c < columns; c++) {
 
-                        transform(getCell(r, c), getTorusMooreNeighbors(getCell(r, c)));
+                        nextGeneration[r][c] = transform(getCell(r, c), getTorusMooreNeighbors(getCell(r, c) , r, c));
+
                     }
                 }
+                this.cells = nextGeneration;
                 return;
             }
             for (int r = 0; r < this.rows; r++) {
                 for (int c = 0; c < columns; c++) {
 
-                    transform(getCell(r, c), getTorusNeumannNeighbors(getCell(r, c)));
+                    nextGeneration[r][c] = transform(getCell(r, c), getTorusNeumannNeighbors(getCell(r, c), r, c));
                 }
             }
+            this.cells = nextGeneration;
+
             return;
         }
         if (this.isMooreNeighborHood) {
             for (int r = 0; r < this.rows; r++) {
                 for (int c = 0; c < columns; c++) {
 
-                    transform(getCell(r, c), getMooreNeighbors(getCell(r, c)));
+                    nextGeneration[r][c] =  transform(getCell(r, c), getMooreNeighbors(getCell(r, c), r , c));
                 }
             }
+            this.cells = nextGeneration;
+
             return;
         }
         for (int r = 0; r < this.rows; r++) {
             for (int c = 0; c < columns; c++) {
 
-                transform(getCell(r, c), getNeumannNeighbors(getCell(r, c)));
+                nextGeneration[r][c] =  transform(getCell(r, c), getNeumannNeighbors(getCell(r, c), r , c ));
             }
         }
+        this.cells = nextGeneration;
+
         return;
 
     }
 
-    private Cell[] getNeumannNeighbors(Cell cell) {
-        ArrayList<Cell> neumannNeighbor = new ArrayList();
+    private Cell[] getNeumannNeighbors(Cell cell, int r, int c ) {
+        ArrayList<Cell> neumannNeighbor = new ArrayList<Cell> ();
         int[] dr = {-1, 0, 0, 0, 1,};
         int[] dc = {0, -1, 0, -1, 0,};
         for (int i = 0; i < 5; i++) {
             if (checkValidNeighbors(dr,dc,i)) {
-                neumannNeighbor.add(getCell(this.rows + dr[i], this.columns + dc[i]));
+                neumannNeighbor.add(getCell(r + dr[i], c + dc[i]));
             }
         }
-        Cell[] Output = (Cell[]) neumannNeighbor.toArray();
+        Cell[] Output = neumannNeighbor.toArray(new Cell[0]);
         return Output;
     }
 
 
-    private Cell[] getMooreNeighbors(Cell cell) {
-        ArrayList mooreNeighbor = new ArrayList();
+    private Cell[] getMooreNeighbors(Cell cell, int r, int c) {
+        ArrayList <Cell> mooreNeighbor = new ArrayList <Cell>();
         //Lösungsansatz per deltarow(dr) und deltacolumn(dc) Array in Zusammenarbeit mit Anton Neumann
         int[] dr = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
         int[] dc = {-1, 0, 1, -1, 0, 1, -1, 0, 1,};
-        for (int i = 0; i < 8; i++) {
-            if ((this.rows + dr[i]) >= 0 && (this.rows + dr[i]) <= getNumberOfRows() && (this.columns + dc[i]) >= 0 && (this.columns + dc[i]) <= getNumberOfColumns()) {
-                mooreNeighbor.add(getCell(this.rows + dr[i], this.columns + dc[i]));
+        for (int i = 0; i < 9; i++) {
+            if ((r + dr[i]) >= 0 && (r + dr[i]) <= (getNumberOfRows() -1) && (c + dc[i]) >= 0 && (c + dc[i]) <= (getNumberOfColumns()-1)) {
+                mooreNeighbor.add(getCell(r + dr[i], c + dc[i]));
             }
         }
-        Cell[] Output = (Cell[]) mooreNeighbor.toArray();
+        Cell[] Output = mooreNeighbor.toArray(new Cell[0]);
         return Output;
     }
 
-    private Cell[] getTorusNeumannNeighbors(Cell cell) {
-        Cell[] torusNeumannNeighbor = new Cell[5];
+    private Cell[] getTorusNeumannNeighbors(Cell cell, int r, int c) {
+        ArrayList <Cell> torusNeumannNeighbor = new ArrayList <Cell>();
         int[] dr = {-1, 0, 0, 0, 1, };
         int[] dc = {0, -1, 0, -1, 0,};
-        for (int i = 0; i < 4; i++) {
-            torusNeumannNeighbor[i] = getCell((this.rows + dr[i] + getNumberOfRows()) % getNumberOfRows(), (this.columns + dc[i] + getNumberOfColumns()) % getNumberOfColumns());
+        for (int i = 0; i < 5; i++) {
+           torusNeumannNeighbor.add(getCell((r + dr[i] + getNumberOfRows()) % getNumberOfRows(), (c + dc[i] + getNumberOfColumns()) % getNumberOfColumns()));
         }
-        return torusNeumannNeighbor;
+        Cell[] Output = torusNeumannNeighbor.toArray(new Cell[0]);
+        return Output;
     }
 
-    private Cell[] getTorusMooreNeighbors(Cell cell) {
-        Cell[] torusMooreNeighbors = new Cell[9];
+    private Cell[] getTorusMooreNeighbors(Cell cell, int r, int c ) {
+        ArrayList <Cell> torusMooreNeighbors = new ArrayList <Cell>();
         int[] dr = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
         int[] dc = {-1, 0, 1, -1, 0, 1, -1, 0, 1,};
-        for (int i = 0; i < 8; i++) {
-            torusMooreNeighbors[i] = getCell((this.rows + dr[i] + getNumberOfRows()) % getNumberOfRows(), (this.columns + dc[i] + getNumberOfColumns()) % getNumberOfColumns());
+        for (int i = 0; i < 9; i++) {
+            torusMooreNeighbors.add(getCell((r + dr[i] + getNumberOfRows()) % getNumberOfRows(), (c + dc[i] + getNumberOfColumns()) % getNumberOfColumns()));
         }
-        return torusMooreNeighbors;
-    }
+        Cell[] Output = torusMooreNeighbors.toArray(new Cell[0]);
+        return Output;    }
 
     private boolean checkValidNeighbors (int[] dr, int[]dc, int i){
 
