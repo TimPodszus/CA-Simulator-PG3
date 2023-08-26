@@ -269,9 +269,9 @@ public abstract class Automaton {
 
     private Cell[] getNeumannNeighbors(Cell cell, int r, int c ) {
         ArrayList<Cell> neumannNeighbor = new ArrayList<Cell> ();
-        int[] dr = {-1, 0, 0, 0, 1,};
-        int[] dc = {0, -1, 0, -1, 0,};
-        for (int i = 0; i < 5; i++) {
+        int[] dr = {-1, 0,  0, 1,};
+        int[] dc = {0, -1,  -1, 0,};
+        for (int i = 0; i < 4; i++) {
             if (checkValidNeighbors(dr,dc,i)) {
                 neumannNeighbor.add(getCell(r + dr[i], c + dc[i]));
             }
@@ -284,9 +284,9 @@ public abstract class Automaton {
     private Cell[] getMooreNeighbors(Cell cell, int r, int c) {
         ArrayList <Cell> mooreNeighbor = new ArrayList <Cell>();
         //Lösungsansatz per deltarow(dr) und deltacolumn(dc) Array in Zusammenarbeit mit Anton Neumann
-        int[] dr = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
-        int[] dc = {-1, 0, 1, -1, 0, 1, -1, 0, 1,};
-        for (int i = 0; i < 9; i++) {
+        int[] dr = {-1, -1, -1, 0,  0, 1, 1, 1};
+        int[] dc = {-1, 0, 1, -1, 1, -1, 0, 1,};
+        for (int i = 0; i < 8; i++) {
             if ((r + dr[i]) >= 0 && (r + dr[i]) <= (getNumberOfRows() -1) && (c + dc[i]) >= 0 && (c + dc[i]) <= (getNumberOfColumns()-1)) {
                 mooreNeighbor.add(getCell(r + dr[i], c + dc[i]));
             }
@@ -297,9 +297,9 @@ public abstract class Automaton {
 
     private Cell[] getTorusNeumannNeighbors(Cell cell, int r, int c) {
         ArrayList <Cell> torusNeumannNeighbor = new ArrayList <Cell>();
-        int[] dr = {-1, 0, 0, 0, 1, };
-        int[] dc = {0, -1, 0, -1, 0,};
-        for (int i = 0; i < 5; i++) {
+        int[] dr = {-1, 0,  0, 1, };
+        int[] dc = {0, -1,  -1, 0,};
+        for (int i = 0; i < 4; i++) {
            torusNeumannNeighbor.add(getCell((r + dr[i] + getNumberOfRows()) % getNumberOfRows(), (c + dc[i] + getNumberOfColumns()) % getNumberOfColumns()));
         }
         Cell[] Output = torusNeumannNeighbor.toArray(new Cell[0]);
@@ -308,9 +308,9 @@ public abstract class Automaton {
 
     private Cell[] getTorusMooreNeighbors(Cell cell, int r, int c ) {
         ArrayList <Cell> torusMooreNeighbors = new ArrayList <Cell>();
-        int[] dr = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
-        int[] dc = {-1, 0, 1, -1, 0, 1, -1, 0, 1,};
-        for (int i = 0; i < 9; i++) {
+        int[] dr = {-1, -1, -1, 0,  0, 1, 1, 1};
+        int[] dc = {-1, 0, 1, -1,  1, -1, 0, 1,};
+        for (int i = 0; i < 8; i++) {
             torusMooreNeighbors.add(getCell((r + dr[i] + getNumberOfRows()) % getNumberOfRows(), (c + dc[i] + getNumberOfColumns()) % getNumberOfColumns()));
         }
         Cell[] Output = torusMooreNeighbors.toArray(new Cell[0]);

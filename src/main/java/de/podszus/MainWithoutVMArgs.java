@@ -14,10 +14,10 @@ public class MainWithoutVMArgs {
             for (int r = 0; r <= 7 ; r++){
                 for (int c = 0; c <= 7; c++){
                     if((test.getCell(r,c)).getState() == 0){
-                        System.out.print("-");
+                        System.out.print("0");
                     }
                     if ((test.getCell(r,c)).getState() == 1){
-                        System.out.print("*");
+                        System.out.print("1");
                     }
                 }                    System.out.println();
 
