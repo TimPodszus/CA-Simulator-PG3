@@ -45,7 +45,6 @@ public abstract class Automaton {
     }
 
 
-
     /**
      * Implementierung der Transformationsregel
      *
@@ -109,6 +108,9 @@ public abstract class Automaton {
                 }
             }
         }
+        this.rows = rows;
+        this.columns = columns;
+        this.cells = newCells;
     }
 
     /**
@@ -185,8 +187,8 @@ public abstract class Automaton {
      */
     public void setState(int row, int column, int state) {
         if (this.cells[row][column].getState() != state) {
-        getCell(row,column).setState(state);
-               }
+            getCell(row, column).setState(state);
+        }
     }
 
     /**
@@ -203,7 +205,7 @@ public abstract class Automaton {
         for (int r = fromRow; r <= toRow; r++) {
             for (int c = fromColumn; c <= toColumn; c++) {
                 Cell cell = getCell(r, c);
-                cell.state = state;
+                cell.setState(state);
             }
         }
 
@@ -227,7 +229,7 @@ public abstract class Automaton {
                 for (int r = 0; r < this.rows; r++) {
                     for (int c = 0; c < columns; c++) {
 
-                        nextGeneration[r][c] = transform(getCell(r, c), getTorusMooreNeighbors(getCell(r, c) , r, c));
+                        nextGeneration[r][c] = transform(getCell(r, c), getTorusMooreNeighbors(getCell(r, c), r, c));
 
                     }
                 }
@@ -248,7 +250,7 @@ public abstract class Automaton {
             for (int r = 0; r < this.rows; r++) {
                 for (int c = 0; c < columns; c++) {
 
-                    nextGeneration[r][c] =  transform(getCell(r, c), getMooreNeighbors(getCell(r, c), r , c));
+                    nextGeneration[r][c] = transform(getCell(r, c), getMooreNeighbors(getCell(r, c), r, c));
                 }
             }
             this.cells = nextGeneration;
@@ -258,7 +260,7 @@ public abstract class Automaton {
         for (int r = 0; r < this.rows; r++) {
             for (int c = 0; c < columns; c++) {
 
-                nextGeneration[r][c] =  transform(getCell(r, c), getNeumannNeighbors(getCell(r, c), r , c ));
+                nextGeneration[r][c] = transform(getCell(r, c), getNeumannNeighbors(getCell(r, c), r, c));
             }
         }
         this.cells = nextGeneration;
@@ -267,13 +269,13 @@ public abstract class Automaton {
 
     }
 
-    private Cell[] getNeumannNeighbors(Cell cell, int r, int c ) {
-        ArrayList<Cell> neumannNeighbor = new ArrayList<Cell> ();
-        int[] dr = {-1, 0,  0, 1,};
-        int[] dc = {0, -1,  -1, 0,};
+    private Cell[] getNeumannNeighbors(Cell cell, int r, int c) {
+        ArrayList<Cell> neumannNeighbor = new ArrayList<Cell>();
+        int[] dr = {-1, 0, 0, 1,};
+        int[] dc = {0, -1, -1, 0,};
         for (int i = 0; i < 4; i++) {
-            if (checkValidNeighbors(dr,dc,i)) {
-                neumannNeighbor.add(getCell(r + dr[i], c + dc[i]));
+            if (checkValidNeighbors(dr, dc, i)) {
+                neumannNeighbor.add(new Cell(getCell(r + dr[i], c + dc[i])));
             }
         }
         Cell[] Output = neumannNeighbor.toArray(new Cell[0]);
@@ -282,13 +284,13 @@ public abstract class Automaton {
 
 
     private Cell[] getMooreNeighbors(Cell cell, int r, int c) {
-        ArrayList <Cell> mooreNeighbor = new ArrayList <Cell>();
+        ArrayList<Cell> mooreNeighbor = new ArrayList<Cell>();
         //Lösungsansatz per deltarow(dr) und deltacolumn(dc) Array in Zusammenarbeit mit Anton Neumann
-        int[] dr = {-1, -1, -1, 0,  0, 1, 1, 1};
+        int[] dr = {-1, -1, -1, 0, 0, 1, 1, 1};
         int[] dc = {-1, 0, 1, -1, 1, -1, 0, 1,};
         for (int i = 0; i < 8; i++) {
-            if ((r + dr[i]) >= 0 && (r + dr[i]) <= (getNumberOfRows() -1) && (c + dc[i]) >= 0 && (c + dc[i]) <= (getNumberOfColumns()-1)) {
-                mooreNeighbor.add(getCell(r + dr[i], c + dc[i]));
+            if ((r + dr[i]) >= 0 && (r + dr[i]) <= (getNumberOfRows() - 1) && (c + dc[i]) >= 0 && (c + dc[i]) <= (getNumberOfColumns() - 1)) {
+                mooreNeighbor.add(new Cell(getCell(r + dr[i], c + dc[i])));
             }
         }
         Cell[] Output = mooreNeighbor.toArray(new Cell[0]);
@@ -296,32 +298,32 @@ public abstract class Automaton {
     }
 
     private Cell[] getTorusNeumannNeighbors(Cell cell, int r, int c) {
-        ArrayList <Cell> torusNeumannNeighbor = new ArrayList <Cell>();
-        int[] dr = {-1, 0,  0, 1, };
-        int[] dc = {0, -1,  -1, 0,};
+        ArrayList<Cell> torusNeumannNeighbor = new ArrayList<Cell>();
+        int[] dr = {-1, 0, 0, 1,};
+        int[] dc = {0, -1, -1, 0,};
         for (int i = 0; i < 4; i++) {
-           torusNeumannNeighbor.add(getCell((r + dr[i] + getNumberOfRows()) % getNumberOfRows(), (c + dc[i] + getNumberOfColumns()) % getNumberOfColumns()));
+            torusNeumannNeighbor.add(new Cell(getCell((r + dr[i] + getNumberOfRows()) % getNumberOfRows(), (c + dc[i] + getNumberOfColumns()) % getNumberOfColumns())));
         }
         Cell[] Output = torusNeumannNeighbor.toArray(new Cell[0]);
         return Output;
     }
 
-    private Cell[] getTorusMooreNeighbors(Cell cell, int r, int c ) {
-        ArrayList <Cell> torusMooreNeighbors = new ArrayList <Cell>();
-        int[] dr = {-1, -1, -1, 0,  0, 1, 1, 1};
-        int[] dc = {-1, 0, 1, -1,  1, -1, 0, 1,};
+    private Cell[] getTorusMooreNeighbors(Cell cell, int r, int c) {
+        ArrayList<Cell> torusMooreNeighbors = new ArrayList<Cell>();
+        int[] dr = {-1, -1, -1, 0, 0, 1, 1, 1};
+        int[] dc = {-1, 0, 1, -1, 1, -1, 0, 1,};
         for (int i = 0; i < 8; i++) {
-            torusMooreNeighbors.add(getCell((r + dr[i] + getNumberOfRows()) % getNumberOfRows(), (c + dc[i] + getNumberOfColumns()) % getNumberOfColumns()));
+            torusMooreNeighbors.add(new Cell(getCell((r + dr[i] + getNumberOfRows()) % getNumberOfRows(), (c + dc[i] + getNumberOfColumns()) % getNumberOfColumns())));
         }
         Cell[] Output = torusMooreNeighbors.toArray(new Cell[0]);
-        return Output;    }
+        return Output;
+    }
 
-    private boolean checkValidNeighbors (int[] dr, int[]dc, int i){
+    private boolean checkValidNeighbors(int[] dr, int[] dc, int i) {
 
-        if ((this.rows + dr[i]) >= 0 && (this.rows + dr[i]) <= getNumberOfRows() && (this.columns + dc[i]) >= 0 && (this.columns + dc[i]) <= getNumberOfColumns()){
+        if ((this.rows + dr[i]) >= 0 && (this.rows + dr[i]) <= getNumberOfRows() && (this.columns + dc[i]) >= 0 && (this.columns + dc[i]) <= getNumberOfColumns()) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

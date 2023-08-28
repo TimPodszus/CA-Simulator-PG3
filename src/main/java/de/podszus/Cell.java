@@ -7,7 +7,7 @@ public class Cell {
     /**
      * Initialisiert die Zelle im Zustand 0
      */
-    int state;
+    private int state;
 
 
     public Cell() {
@@ -17,7 +17,7 @@ public class Cell {
     /**
      * Initialisiert die Zelle im übergebenen Zustand
      *
-     * @param state
+     * @param state  übergebener neuer Zustand der Zelle
      */
     public Cell(int state) {
         this.state = state;
@@ -27,7 +27,7 @@ public class Cell {
      * Copy-Konstruktor; initialisiert die Zelle mit dem Zustand der
      * übergebenen Zelle
      *
-     * @param cell
+     * @param cell zu kopierende Zelle
      */
     public Cell(Cell cell) {
         this.state = cell.getState();
