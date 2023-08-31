@@ -1,6 +1,8 @@
 package de.podszus;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -8,7 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -28,6 +29,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        Automaton test = new GameOfLifeAutomaton(20,20,true);
+           test.randomPopulation();
+
+
 
         VBox hauptbox = new VBox();
         final MenuBar menuBar = new MenuBar();
@@ -121,9 +126,11 @@ public class Main extends Application {
         Button buttonZoomIn = new Button();
         buttonZoomIn.setTooltip(new Tooltip("Zoom In"));
         buttonZoomIn.setGraphic(new ImageView(new Image("ZoomIn24.gif")));
+
         Button buttonZoomOut = new Button();
         buttonZoomOut.setTooltip(new Tooltip("Zoom Out"));
         buttonZoomOut.setGraphic(new ImageView(new Image("ZoomOut24.gif")));
+
         Button buttonStart = new Button();
         buttonStart.setTooltip(new Tooltip("Start"));
         buttonStart.setGraphic(new ImageView(new Image("Start24.gif")));
@@ -143,21 +150,28 @@ public class Main extends Application {
 
 
         VBox zustandspanel = new VBox();
-        ArrayList<ColorPickerHBox> ColorPickerPanels = new ArrayList<>();
+        ArrayList<ColorPickerHBox> colorPickerPanels = new ArrayList<>();
+        ColorPickerHBox[] test2 = colorPickerPanels.toArray(new ColorPickerHBox[0]);
 
         //Anzahl der ColorPicker
-        int anzahl = 2;
+        int anzahl = 20;
         for (int i = 1; i <= anzahl; i++) {
             ColorPickerHBox farbwaehler = new ColorPickerHBox(zustandspanel, i);
-            ColorPickerPanels.add(farbwaehler);
+            colorPickerPanels.add(farbwaehler);
         }
 
         ScrollPane scrollPanelinks = new ScrollPane(zustandspanel);
+        scrollPanelinks.setMinWidth(200);
 
         //Region, die die konkrete Simulation haust
-        Region populationspanel = new Region();
+        PopulationsPanel populationspanel = new PopulationsPanel(test, colorPickerPanels);
+
         ScrollPane scrollPanerechts = new ScrollPane(populationspanel);
         scrollPanerechts.setPrefSize(1100, 600);
+        scrollPanerechts.fitToWidthProperty();
+        scrollPanerechts.fitToHeightProperty();
+        scrollPanerechts.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPanerechts.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         innereBox.getChildren().addAll(scrollPanelinks, scrollPanerechts);
 
 
@@ -169,6 +183,21 @@ public class Main extends Application {
         primaryStage.setTitle("CAS-Simulator");
         primaryStage.setScene(new Scene(hauptbox, 1280, 720));
         primaryStage.show();
+
+
+
+        buttonZoomOut.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+            populationspanel.zoomOut();
+            }
+        });
+        buttonZoomIn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+            populationspanel.zoomIn();
+            }
+        });
     }
 
 

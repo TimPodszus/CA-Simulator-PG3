@@ -12,12 +12,27 @@ import javafx.scene.paint.Color;
  * @param instanziierungen Übergeben wird eine Anzahl, wie viele HBoxen eingefügt werden sollen. Dieses ist u.a. notwendig für die Beschriftung der Radiobuttons
  */
 public class ColorPickerHBox {
+    String nummer;
+    HBox hBox;
+    ColorPicker colorPicker;
+
+
+    RadioButton radioButton;
         ColorPickerHBox(VBox vBox, int instanziierungen) {
-            String nummer = Integer.toString(instanziierungen);
-            HBox hBox = new HBox(10);
-            RadioButton radioButton = new RadioButton(nummer);
-            ColorPicker colorPicker = new ColorPicker(Color.color(Math.random(), Math.random(), Math.random()));
+            this.nummer = Integer.toString(instanziierungen);
+             this.hBox = new HBox(10);
+            this.radioButton = new RadioButton(nummer);
+             this.colorPicker = new ColorPicker(Color.color(Math.random(), Math.random(), Math.random()));
             hBox.getChildren().addAll(radioButton, colorPicker);
             vBox.getChildren().add(hBox);
         }
+
+        public ColorPicker getColorPicker (){
+
+            return this.colorPicker;
+        }
+
+    public RadioButton getRadioButton() {
+        return radioButton;
+    }
 }

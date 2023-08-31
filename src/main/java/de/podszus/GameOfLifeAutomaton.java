@@ -13,8 +13,8 @@ public class GameOfLifeAutomaton extends Automaton {
     protected Cell transform(Cell cell, Cell[] neighbors){
         int livingneighbors = 0;
         Cell outputCell = new Cell(cell);
-        for (int i = 0; i < neighbors.length; i++) {
-            if (neighbors[i].getState() == 1){
+        for (Cell neighbor : neighbors) {
+            if (neighbor.getState() == 1) {
                 livingneighbors++;
             }
 
@@ -25,10 +25,9 @@ public class GameOfLifeAutomaton extends Automaton {
 
                 outputCell.setState(0);
             }
-        } else if (cell.getState() == 0) {
-            if (livingneighbors == 3 ){
+        } else if (cell.getState() == 0 && (livingneighbors == 3 )){
                 outputCell.setState(1);
-            }
+
 
         }
 

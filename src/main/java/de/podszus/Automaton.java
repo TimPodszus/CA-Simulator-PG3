@@ -1,6 +1,7 @@
 package de.podszus;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Abstrakte Klasse zur Repräsentation eines zellulären Automaten
@@ -99,8 +100,8 @@ public abstract class Automaton {
      */
     public void changeSize(int rows, int columns) {
         Cell[][] newCells = new Cell[rows][columns];
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < columns; c++) {
+        for (int r = 0; r < this.rows; r++) {
+            for (int c = 0; c < this.columns; c++) {
                 if (cells[r][c] != null) {
                     newCells[r][c] = cells[r][c];
                 } else {
@@ -160,9 +161,10 @@ public abstract class Automaton {
      * setzt für jede Zelle einen zufällig erzeugten Zustand
      */
     public void randomPopulation() {
+        Random ran = new Random();
         for (int r = 0; r < this.rows; r++) {
             for (int c = 0; c < this.columns; c++) {
-                this.setState(r, c, (int) (Math.random() * numberofStates));
+                this.setState(r, c,ran.nextInt(0,this.numberofStates));
             }
         }
     }
@@ -270,7 +272,7 @@ public abstract class Automaton {
     }
 
     private Cell[] getNeumannNeighbors(Cell cell, int r, int c) {
-        ArrayList<Cell> neumannNeighbor = new ArrayList<Cell>();
+        ArrayList<Cell> neumannNeighbor = new ArrayList<>();
         int[] dr = {-1, 0, 0, 1,};
         int[] dc = {0, -1, -1, 0,};
         for (int i = 0; i < 4; i++) {
@@ -284,7 +286,7 @@ public abstract class Automaton {
 
 
     private Cell[] getMooreNeighbors(Cell cell, int r, int c) {
-        ArrayList<Cell> mooreNeighbor = new ArrayList<Cell>();
+        ArrayList<Cell> mooreNeighbor = new ArrayList<>();
         //Lösungsansatz per deltarow(dr) und deltacolumn(dc) Array in Zusammenarbeit mit Anton Neumann
         int[] dr = {-1, -1, -1, 0, 0, 1, 1, 1};
         int[] dc = {-1, 0, 1, -1, 1, -1, 0, 1,};
@@ -298,7 +300,7 @@ public abstract class Automaton {
     }
 
     private Cell[] getTorusNeumannNeighbors(Cell cell, int r, int c) {
-        ArrayList<Cell> torusNeumannNeighbor = new ArrayList<Cell>();
+        ArrayList<Cell> torusNeumannNeighbor = new ArrayList<>();
         int[] dr = {-1, 0, 0, 1,};
         int[] dc = {0, -1, -1, 0,};
         for (int i = 0; i < 4; i++) {
@@ -309,7 +311,7 @@ public abstract class Automaton {
     }
 
     private Cell[] getTorusMooreNeighbors(Cell cell, int r, int c) {
-        ArrayList<Cell> torusMooreNeighbors = new ArrayList<Cell>();
+        ArrayList<Cell> torusMooreNeighbors = new ArrayList<>();
         int[] dr = {-1, -1, -1, 0, 0, 1, 1, 1};
         int[] dc = {-1, 0, 1, -1, 1, -1, 0, 1,};
         for (int i = 0; i < 8; i++) {
