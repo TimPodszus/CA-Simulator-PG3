@@ -2,7 +2,7 @@ package de.podszus;
 
 public class KruemelmonsterAutomaton extends Automaton {
     public KruemelmonsterAutomaton(int rows, int columns, boolean isTorus){
-        super(rows,columns, 20,false,isTorus);
+        super(rows,columns, 10,false,isTorus);
     }
     public KruemelmonsterAutomaton() {
         this(100, 100, true);

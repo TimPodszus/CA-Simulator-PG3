@@ -100,9 +100,9 @@ public abstract class Automaton {
      */
     public void changeSize(int rows, int columns) {
         Cell[][] newCells = new Cell[rows][columns];
-        for (int r = 0; r < this.rows; r++) {
-            for (int c = 0; c < this.columns; c++) {
-                if (cells[r][c] != null) {
+        for (int r = 0; r < newCells.length; r++) {
+            for (int c = 0; c < newCells[r].length; c++) {
+                if (r < this.rows && c < this.columns) {
                     newCells[r][c] = cells[r][c];
                 } else {
                     newCells[r][c] = new Cell(0);
@@ -113,6 +113,7 @@ public abstract class Automaton {
         this.columns = columns;
         this.cells = newCells;
     }
+
 
     /**
      * Liefert Informationen, ob der Automat als Torus betrachtet wird
@@ -160,8 +161,8 @@ public abstract class Automaton {
     /**
      * setzt für jede Zelle einen zufällig erzeugten Zustand
      */
+    Random ran = new Random();
     public void randomPopulation() {
-        Random ran = new Random();
         for (int r = 0; r < this.rows; r++) {
             for (int c = 0; c < this.columns; c++) {
                 this.setState(r, c,ran.nextInt(0,this.numberofStates));
@@ -204,8 +205,8 @@ public abstract class Automaton {
      */
     public void setState(int fromRow, int fromColumn, int toRow,
                          int toColumn, int state) {
-        for (int r = fromRow; r <= toRow; r++) {
-            for (int c = fromColumn; c <= toColumn; c++) {
+        for (int r = fromRow; r < toRow; r++) {
+            for (int c = fromColumn; c < toColumn; c++) {
                 Cell cell = getCell(r, c);
                 cell.setState(state);
             }
@@ -267,7 +268,6 @@ public abstract class Automaton {
         }
         this.cells = nextGeneration;
 
-        return;
 
     }
 
@@ -280,8 +280,7 @@ public abstract class Automaton {
                 neumannNeighbor.add(new Cell(getCell(r + dr[i], c + dc[i])));
             }
         }
-        Cell[] Output = neumannNeighbor.toArray(new Cell[0]);
-        return Output;
+        return neumannNeighbor.toArray(new Cell[0]);
     }
 
 
@@ -295,8 +294,7 @@ public abstract class Automaton {
                 mooreNeighbor.add(new Cell(getCell(r + dr[i], c + dc[i])));
             }
         }
-        Cell[] Output = mooreNeighbor.toArray(new Cell[0]);
-        return Output;
+        return mooreNeighbor.toArray(new Cell[0]);
     }
 
     private Cell[] getTorusNeumannNeighbors(Cell cell, int r, int c) {
@@ -306,8 +304,7 @@ public abstract class Automaton {
         for (int i = 0; i < 4; i++) {
             torusNeumannNeighbor.add(new Cell(getCell((r + dr[i] + getNumberOfRows()) % getNumberOfRows(), (c + dc[i] + getNumberOfColumns()) % getNumberOfColumns())));
         }
-        Cell[] Output = torusNeumannNeighbor.toArray(new Cell[0]);
-        return Output;
+        return torusNeumannNeighbor.toArray(new Cell[0]);
     }
 
     private Cell[] getTorusMooreNeighbors(Cell cell, int r, int c) {
@@ -317,20 +314,17 @@ public abstract class Automaton {
         for (int i = 0; i < 8; i++) {
             torusMooreNeighbors.add(new Cell(getCell((r + dr[i] + getNumberOfRows()) % getNumberOfRows(), (c + dc[i] + getNumberOfColumns()) % getNumberOfColumns())));
         }
-        Cell[] Output = torusMooreNeighbors.toArray(new Cell[0]);
-        return Output;
+        return torusMooreNeighbors.toArray(new Cell[0]);
     }
 
     private boolean checkValidNeighbors(int[] dr, int[] dc, int i) {
-
-        if ((this.rows + dr[i]) >= 0 && (this.rows + dr[i]) <= getNumberOfRows() && (this.columns + dc[i]) >= 0 && (this.columns + dc[i]) <= getNumberOfColumns()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+return (this.rows + dr[i]) >= 0 && (this.rows + dr[i]) <= getNumberOfRows() && (this.columns + dc[i]) >= 0 && (this.columns + dc[i]) <= getNumberOfColumns();
 
 
+
+
+
+}
 }
 
 

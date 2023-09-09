@@ -3,80 +3,162 @@ package de.podszus;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.RadioButton;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-
-import java.util.ArrayList;
+import javafx.scene.input.MouseEvent;
 
 public class PopulationsPanel extends Region {
 
-    private Automaton automaton;
-    private Canvas canvas;
-    private double WIDTH = 30;
-    private double linewidth = 2;
+    private final Automaton automaton;
+    private final Canvas canvas;
+    private double width = 30;
+    private double lineWidth = 2;
 
-    GraphicsContext context;
 
-    public GraphicsContext getContext() {
-        return context;
+    public double getCellWidth() {
+        return width;
     }
-    ArrayList<ColorPickerHBox> colorPickerPanels;
-    PopulationsPanel(Automaton automaton, ArrayList<ColorPickerHBox> colorPickerPanels) {
+
+    HBox[] colorPickerPanels;
+
+
+    double startx;
+    double starty;
+    CAStage stage;
+
+    PopulationsPanel(Automaton automaton, HBox[] colorPickerPanels, CAStage stage) {
         this.automaton = automaton;
         this.colorPickerPanels = colorPickerPanels;
+        this.stage = stage;
         this.canvas = new Canvas(
-                this.automaton.getNumberOfColumns() * WIDTH + this.automaton.getNumberOfColumns() * (linewidth * 3),
-                this.automaton.getNumberOfRows() * WIDTH + this.automaton.getNumberOfRows() * (linewidth * 3));
-        this.context = this.canvas.getGraphicsContext2D();
-        paintCanvas(context, this.colorPickerPanels);
+                this.automaton.getNumberOfColumns() * width + this.automaton.getNumberOfColumns() * (lineWidth * 3),
+                this.automaton.getNumberOfRows() * width + this.automaton.getNumberOfRows() * (lineWidth * 3));
+
+        this.canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, this::changeCell);
+        this.canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, this::changeCellArea);
+        paintCanvas();
         getChildren().add(canvas);
     }
 
-    private void paintCanvas(GraphicsContext context, ArrayList<ColorPickerHBox> colorPickerPanels) {
 
-        context.setLineWidth(linewidth);
+    void paintCanvas() {
+        GraphicsContext context = this.canvas.getGraphicsContext2D();
+        updateCanvas();
+        context.setLineWidth(lineWidth);
         context.setFill(Color.BLACK);
-        context.strokeRect(linewidth, linewidth, this.automaton.getNumberOfColumns() * WIDTH + this.automaton.getNumberOfColumns() * linewidth, this.automaton.getNumberOfRows() * WIDTH + this.automaton.getNumberOfRows() * linewidth);
+        context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        context.strokeRect(lineWidth, lineWidth, this.automaton.getNumberOfColumns() * width + this.automaton.getNumberOfColumns() * lineWidth, this.automaton.getNumberOfRows() * width + this.automaton.getNumberOfRows() * lineWidth);
         for (int r = 0; r < this.automaton.getNumberOfRows(); r++) {
             for (int c = 0; c < this.automaton.getNumberOfColumns(); c++) {
                 Cell cell = automaton.getCell(r, c);
                 int index = cell.getState();
-                ColorPickerHBox colorPickerHBox = colorPickerPanels.get(index);
-                ColorPicker cp = colorPickerHBox.getColorPicker();
+                HBox colorPickerHBox = colorPickerPanels[index];
+                ColorPicker cp = (ColorPicker) colorPickerHBox.getChildren().get(1);
+                cp.setOnAction(e -> paintCanvas());
                 context.setFill(cp.getValue());
-                context.fillRect(((c * WIDTH) + (c * linewidth)) +  1.5 * linewidth , ((r * WIDTH) + (r * linewidth)) + 1.5 * linewidth, WIDTH, WIDTH);
+                context.fillRect(((c * width) + (c * lineWidth)) + 1.5 * lineWidth, ((r * width) + (r * lineWidth)) + 1.5 * lineWidth, width, width);
                 context.setFill(Color.BLACK);
-                context.strokeRect((c * WIDTH + c * context.getLineWidth()) , (r * WIDTH + r * context.getLineWidth()) , WIDTH + 2 * context.getLineWidth(), WIDTH + 2 * context.getLineWidth());
+                context.strokeRect((c * width + c * context.getLineWidth()), (r * width + r * context.getLineWidth()), width + 2 * context.getLineWidth(), width + 2 * context.getLineWidth());
 
             }
         }
     }
 
-    void zoomIn(){
-        this.WIDTH = WIDTH * 2;
-        this.linewidth = linewidth * 2;
-        clear();
-        paintCanvas(getContext(),getColorPickerPanels());
-        getChildren().add(canvas);
-    }
-      void zoomOut(){
-        this.WIDTH = WIDTH / 2;
-        this.linewidth = linewidth / 2;
-        clear();
-          paintCanvas(getContext(),getColorPickerPanels());
-          getChildren().add(canvas);
-    }
-    void clear(){
-    context = getContext();
-    context.setStroke(Color.WHITE);
-    context.fillRect(0,0,this.automaton.getNumberOfColumns() * WIDTH + this.automaton.getNumberOfColumns() * (linewidth * 3),
-            this.automaton.getNumberOfRows() * WIDTH + this.automaton.getNumberOfRows() * (linewidth * 3));
+    private void updateCanvas() {
+        canvas.setHeight(this.automaton.getNumberOfRows() * width + this.automaton.getNumberOfRows() * (lineWidth * 3));
+        canvas.setWidth(this.automaton.getNumberOfColumns() * width + this.automaton.getNumberOfColumns() * (lineWidth * 3));
     }
 
-    public ArrayList<ColorPickerHBox> getColorPickerPanels() {
-        return colorPickerPanels;
+    void zoomIn() {
+
+        this.width = width * 2;
+        this.lineWidth = lineWidth * 2;
+        paintCanvas();
+
+    }
+
+    void zoomOut() {
+        this.width = width / 2;
+        this.lineWidth = lineWidth / 2;
+
+        paintCanvas();
+    }
+
+    void changeCell(MouseEvent event) {
+        int checkedRadioButton = 0;
+        for (int i = 0; i < colorPickerPanels.length; i++) {
+            HBox currentRadioButtonHBox = colorPickerPanels[i];
+            RadioButton currentRadioButton = (RadioButton) currentRadioButtonHBox.getChildren().get(0);
+            if (currentRadioButton.isSelected()) {
+                checkedRadioButton = i;
+
+            }
+        }
+        double x = event.getX();
+        double y = event.getY();
+        startx = x;
+        starty = y;
+        if (x < lineWidth || y < lineWidth || x > lineWidth + automaton.rows * width || y > lineWidth + automaton.columns * width) {
+            return;
+        }
+        int column = (int) ((x - lineWidth) / (width+ lineWidth));
+        int row = (int) ((y - lineWidth) / (width + lineWidth));
+
+        automaton.getCell(row, column).setState(checkedRadioButton);
+        paintCanvas();
+
+
+    }
+
+    void changeCellArea (MouseEvent event){
+
+        int checkedRadioButton = 0;
+        for (int i = 0; i < colorPickerPanels.length; i++) {
+            HBox currentRadioButtonHBox = colorPickerPanels[i];
+            RadioButton currentRadioButton = (RadioButton) currentRadioButtonHBox.getChildren().get(0);
+            if (currentRadioButton.isSelected()) {
+                checkedRadioButton = i;
+
+            }
+        }
+
+        double endx = event.getX();
+        double endy = event.getY();
+        if (endx < lineWidth || endy < lineWidth || endx > lineWidth + automaton.rows * width || endy > lineWidth + automaton.columns * width) {
+            return;
+        }
+       if (endx > lineWidth + automaton.getNumberOfColumns() * width) {
+            endx = lineWidth + automaton.getNumberOfColumns() * width -1;
+
+        }
+        if (endy > lineWidth + automaton.getNumberOfRows() * width) {
+            endy = lineWidth + automaton.getNumberOfRows() * width -1;
+        }
+
+        int startcolumn = (int) ((startx - lineWidth) / (width+ lineWidth));
+        int startrow = (int) ((starty - lineWidth) / (width + lineWidth));
+        int endcolumn = (int) ((endx - lineWidth) / (width + lineWidth));
+        int endrow = (int) ((endy - lineWidth) / (width+ lineWidth));
+        if (endcolumn < startcolumn){
+            int x = startcolumn;
+            startcolumn = endcolumn;
+            endcolumn = x;
+        }
+        if (endrow < startrow){
+            int x = startrow;
+            startrow = endrow;
+            endrow = x;
+        }
+        automaton.setState(startrow,startcolumn, endrow, endcolumn, checkedRadioButton);
+
+        paintCanvas();
+
     }
 }
+
 
 
 
