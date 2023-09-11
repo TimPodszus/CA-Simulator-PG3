@@ -18,7 +18,7 @@ public class PopulationChangeBox extends Stage {
 
         Dialog<Pair<Integer,Integer>> dialog = new Dialog<>();
         dialog.setTitle("Größe ändern");
-        dialog.setHeaderText("Größe der Population ändern (2-200)");
+        dialog.setHeaderText("Größe der Population ändern (2-100)");
 
 
         ButtonType bestaetigungsButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
@@ -29,27 +29,30 @@ public class PopulationChangeBox extends Stage {
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-        Spinner<Integer> rows = new Spinner<>(2,200,automaton.getNumberOfRows());
+        Spinner<Integer> rows = new Spinner<>(2,100,automaton.getNumberOfRows());
         rows.setPromptText("Reihen");
-        Spinner<Integer> columns = new Spinner<>(2,200,automaton.getNumberOfColumns());
+        Spinner<Integer> columns = new Spinner<>(2,100,automaton.getNumberOfColumns());
         columns.setPromptText("Spalten");
+        rows.setEditable(true);
+        columns.setEditable(true);
+
 
         grid.add(new Label("Reihen:"), 0, 0);
         grid.add(rows, 1, 0);
         grid.add(new Label("Spalten:"), 0, 1);
         grid.add(columns, 1, 1);
 
-        Node bestaetigunsbutton = dialog.getDialogPane().lookupButton(bestaetigungsButtonType);
+        Node bestaetigungsButton = dialog.getDialogPane().lookupButton(bestaetigungsButtonType);
 
 
         rows.valueProperty().addListener((observable, oldValue, newValue) -> {
-            boolean validInput = (newValue >= 2 && newValue <= 200 && columns.getValue() >= 2 && columns.getValue() <= 200);
-            bestaetigunsbutton.setDisable(!validInput);
+            boolean validInput = (newValue >= 2 && newValue <= 100 && columns.getValue() >= 2 && columns.getValue() <= 100);
+            bestaetigungsButton.setDisable(!validInput);
         });
 
         columns.valueProperty().addListener((observable, oldValue, newValue) -> {
-            boolean validInput = (rows.getValue() >= 2 && rows.getValue() <= 200 && newValue >= 2 && newValue <= 200);
-            bestaetigunsbutton.setDisable(!validInput);
+            boolean validInput = (rows.getValue() >= 2 && rows.getValue() <= 100 && newValue >= 2 && newValue <= 100);
+            bestaetigungsButton.setDisable(!validInput);
         });
 
         dialog.getDialogPane().setContent(grid);
@@ -59,7 +62,7 @@ public class PopulationChangeBox extends Stage {
             if (dialogButton == bestaetigungsButtonType) {
                 return new Pair<>(rows.getValue(), rows.getValue());
             }
-             abbruch = true;
+            abbruch = true;
             rowsOutput = automaton.rows;
             columnsOutput = automaton.columns;
             return null;

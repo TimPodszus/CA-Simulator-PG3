@@ -30,7 +30,7 @@ public abstract class Automaton {
      * @param isTorus             true, falls die Zellen als
      *                            Torus betrachtet werden
      */
-    public Automaton(int rows, int columns, int numberOfStates,
+    protected Automaton(int rows, int columns, int numberOfStates,
                      boolean isMooreNeighborHood, boolean isTorus) {
         this.rows = rows;
         this.columns = columns;
@@ -151,11 +151,14 @@ public abstract class Automaton {
      * setzt alle Zellen in den Zustand 0
      */
     public void clearPopulation() {
-        for (int i = 0; i < this.rows; i++) {
-            for (int j = 0; i < this.columns; j++) {
-                this.setState(i, j, 0);
+        for (int r = 0; r < this.getNumberOfRows(); r++) {
+            for (int c = 0; c < this.getNumberOfColumns(); c++) {
+                Cell cell = getCell(r, c);
+                cell.setState(0);
             }
         }
+
+
     }
 
     /**
@@ -205,8 +208,8 @@ public abstract class Automaton {
      */
     public void setState(int fromRow, int fromColumn, int toRow,
                          int toColumn, int state) {
-        for (int r = fromRow; r < toRow; r++) {
-            for (int c = fromColumn; c < toColumn; c++) {
+        for (int r = fromRow; r <= toRow; r++) {
+            for (int c = fromColumn; c <= toColumn; c++) {
                 Cell cell = getCell(r, c);
                 cell.setState(state);
             }
@@ -227,48 +230,31 @@ public abstract class Automaton {
     public void nextGeneration() throws Throwable {
         Cell[][] nextGeneration = new Cell[rows][columns];
 
-        if (this.isTorus) {
-            if (this.isMooreNeighborHood) {
-                for (int r = 0; r < this.rows; r++) {
-                    for (int c = 0; c < columns; c++) {
-
-                        nextGeneration[r][c] = transform(getCell(r, c), getTorusMooreNeighbors(getCell(r, c), r, c));
-
-                    }
-                }
-                this.cells = nextGeneration;
-                return;
-            }
-            for (int r = 0; r < this.rows; r++) {
-                for (int c = 0; c < columns; c++) {
-
-                    nextGeneration[r][c] = transform(getCell(r, c), getTorusNeumannNeighbors(getCell(r, c), r, c));
-                }
-            }
-            this.cells = nextGeneration;
-
-            return;
-        }
-        if (this.isMooreNeighborHood) {
-            for (int r = 0; r < this.rows; r++) {
-                for (int c = 0; c < columns; c++) {
-
-                    nextGeneration[r][c] = transform(getCell(r, c), getMooreNeighbors(getCell(r, c), r, c));
-                }
-            }
-            this.cells = nextGeneration;
-
-            return;
-        }
         for (int r = 0; r < this.rows; r++) {
             for (int c = 0; c < columns; c++) {
-
-                nextGeneration[r][c] = transform(getCell(r, c), getNeumannNeighbors(getCell(r, c), r, c));
+                Cell cell = getCell(r, c);
+                Cell[] neighbors = getNeighbors(cell, r, c);
+                nextGeneration[r][c] = transform(cell, neighbors);
             }
         }
+
         this.cells = nextGeneration;
+    }
 
-
+    private Cell[] getNeighbors(Cell cell, int row, int col) {
+        if (this.isTorus) {
+            if (this.isMooreNeighborHood) {
+                return getTorusMooreNeighbors(cell, row, col);
+            } else {
+                return getTorusNeumannNeighbors(cell, row, col);
+            }
+        } else {
+            if (this.isMooreNeighborHood) {
+                return getMooreNeighbors(cell, row, col);
+            } else {
+                return getNeumannNeighbors(cell, row, col);
+            }
+        }
     }
 
     private Cell[] getNeumannNeighbors(Cell cell, int r, int c) {

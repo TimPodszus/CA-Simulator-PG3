@@ -1,0 +1,14 @@
+
+g	java:S112>"FDefine and throw a dedicated exception instead of using a generic one.(Ü äŞÿÿÿÿÿ8ş…ÍŸ§1
+[
+java:S5993!"9Change the visibility of this constructor to "protected".(‘§Éıÿÿÿÿ8á†ÍŸ§1
+p
+java:S3776ã"RRefactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed.(Ù®Í¼8ì†ÍŸ§1
+N
+java:S1172’"+Remove this unused method parameter "cell".(åÒØÙÿÿÿÿÿ8ÁàÑŸ§1
+N
+java:S1172Ÿ"+Remove this unused method parameter "cell".(©…İ£øÿÿÿÿ8ÅàÑŸ§1
+I
+java:S1172¬"+Remove this unused method parameter "cell".(ä¬°¼8ÈàÑŸ§1
+N
+java:S1172¶"+Remove this unused method parameter "cell".(õÀ°Œıÿÿÿÿ8ËàÑŸ§1

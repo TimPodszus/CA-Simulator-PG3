@@ -17,6 +17,8 @@ public class PopulationsPanel extends Region {
     private double lineWidth = 2;
 
 
+
+
     public double getCellWidth() {
         return width;
     }
@@ -24,8 +26,8 @@ public class PopulationsPanel extends Region {
     HBox[] colorPickerPanels;
 
 
-    double startx;
-    double starty;
+    double startX;
+    double startY;
     CAStage stage;
 
     PopulationsPanel(Automaton automaton, HBox[] colorPickerPanels, CAStage stage) {
@@ -49,7 +51,6 @@ public class PopulationsPanel extends Region {
         context.setLineWidth(lineWidth);
         context.setFill(Color.BLACK);
         context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
         context.strokeRect(lineWidth, lineWidth, this.automaton.getNumberOfColumns() * width + this.automaton.getNumberOfColumns() * lineWidth, this.automaton.getNumberOfRows() * width + this.automaton.getNumberOfRows() * lineWidth);
         for (int r = 0; r < this.automaton.getNumberOfRows(); r++) {
             for (int c = 0; c < this.automaton.getNumberOfColumns(); c++) {
@@ -99,12 +100,12 @@ public class PopulationsPanel extends Region {
         }
         double x = event.getX();
         double y = event.getY();
-        startx = x;
-        starty = y;
+        startX = x;
+        startY = y;
         if (x < lineWidth || y < lineWidth || x > lineWidth + automaton.rows * width || y > lineWidth + automaton.columns * width) {
             return;
         }
-        int column = (int) ((x - lineWidth) / (width+ lineWidth));
+        int column = (int) ((x - lineWidth) / (width + lineWidth));
         int row = (int) ((y - lineWidth) / (width + lineWidth));
 
         automaton.getCell(row, column).setState(checkedRadioButton);
@@ -113,7 +114,8 @@ public class PopulationsPanel extends Region {
 
     }
 
-    void changeCellArea (MouseEvent event){
+    void changeCellArea(MouseEvent event) {
+        // Umsetzung dieser Methode mit Hilfestellung von Niels-Thorben Tax
 
         int checkedRadioButton = 0;
         for (int i = 0; i < colorPickerPanels.length; i++) {
@@ -125,34 +127,34 @@ public class PopulationsPanel extends Region {
             }
         }
 
-        double endx = event.getX();
-        double endy = event.getY();
-        if (endx < lineWidth || endy < lineWidth || endx > lineWidth + automaton.rows * width || endy > lineWidth + automaton.columns * width) {
+        double endX = event.getX();
+        double endY = event.getY();
+        if (endX < lineWidth || endY < lineWidth || endX > lineWidth + automaton.rows * width || endY > lineWidth + automaton.columns * width) {
             return;
         }
-       if (endx > lineWidth + automaton.getNumberOfColumns() * width) {
-            endx = lineWidth + automaton.getNumberOfColumns() * width -1;
+        if (endX > lineWidth + automaton.getNumberOfColumns() * width) {
+            endX = lineWidth + automaton.getNumberOfColumns() * width - 1;
 
         }
-        if (endy > lineWidth + automaton.getNumberOfRows() * width) {
-            endy = lineWidth + automaton.getNumberOfRows() * width -1;
+        if (endY > lineWidth + automaton.getNumberOfRows() * width) {
+            endY = lineWidth + automaton.getNumberOfRows() * width - 1;
         }
 
-        int startcolumn = (int) ((startx - lineWidth) / (width+ lineWidth));
-        int startrow = (int) ((starty - lineWidth) / (width + lineWidth));
-        int endcolumn = (int) ((endx - lineWidth) / (width + lineWidth));
-        int endrow = (int) ((endy - lineWidth) / (width+ lineWidth));
-        if (endcolumn < startcolumn){
+        int startcolumn = (int) ((startX - lineWidth) / (width + lineWidth));
+        int startrow = (int) ((startY - lineWidth) / (width + lineWidth));
+        int endcolumn = (int) ((endX - lineWidth) / (width + lineWidth));
+        int endrow = (int) ((endY - lineWidth) / (width + lineWidth));
+        if (endcolumn < startcolumn) {
             int x = startcolumn;
             startcolumn = endcolumn;
             endcolumn = x;
         }
-        if (endrow < startrow){
+        if (endrow < startrow) {
             int x = startrow;
             startrow = endrow;
             endrow = x;
         }
-        automaton.setState(startrow,startcolumn, endrow, endcolumn, checkedRadioButton);
+        automaton.setState(startrow, startcolumn, endrow, endcolumn, checkedRadioButton);
 
         paintCanvas();
 
