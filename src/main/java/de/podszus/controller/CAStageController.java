@@ -55,7 +55,19 @@ public class CAStageController {
         });
 
 
-        stage.getButtonStop().setOnAction(e -> Platform.exit());
+
+
+        stage.getButtonStep().setOnAction(e->{
+            automaton.nextGeneration();
+            populationsPanel.update();
+        });
+
+        stage.getItemSchritt().setOnAction(e->{
+            automaton.nextGeneration();
+            populationsPanel.update();
+        });
+
+
 
 
     }

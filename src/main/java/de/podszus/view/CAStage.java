@@ -63,8 +63,10 @@ public class CAStage extends Stage {
         itemLaden = new MenuItem("_Laden...");
         itemLaden.setAccelerator(KeyCombination.keyCombination("SHORTCUT + L"));
         itemLaden.setGraphic(new ImageView(new Image("Load16.gif")));
+        itemLaden.setDisable(true);
         itemEditor = new MenuItem("_Editor");
         itemEditor.setAccelerator(KeyCombination.keyCombination("SHORTCUT + E"));
+        itemEditor.setDisable(true);
         itemBeenden = new MenuItem("_Beenden");
         itemBeenden.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Q"));
 
@@ -95,7 +97,7 @@ public class CAStage extends Stage {
         itemspeichernSerialisieren = new MenuItem("_Serialisieren");
         itemspeichernSerialisieren.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + S"));
         submenueSpeichern.getItems().addAll(itemspeichernXML, itemspeichernSerialisieren);
-
+        submenueSpeichern.setDisable(true);
         //Submenue Laden
         Menu submenueLaden = new Menu("L_aden");
         itemladenXML = new MenuItem("_XML");
@@ -104,7 +106,7 @@ public class CAStage extends Stage {
         itemladenDeserialisieren.setAccelerator(KeyCombination.keyCombination("SHORTCUT + Shift + S"));
         submenueLaden.getItems().addAll(itemladenXML, itemladenDeserialisieren);
         menuPopulation.getItems().addAll(itemGroesseAendern, itemLoeschen, itemErzeugen, itemTorus, new SeparatorMenuItem(), itemZoomIn, itemZoomOut, new SeparatorMenuItem(), submenueSpeichern, submenueLaden);
-
+        submenueLaden.setDisable(true);
         /* Erzeugen des Ausklappbaren Menues Simulation*/
         Menu menuSimulation = new Menu("_Simulation");
         itemSchritt = new MenuItem("Schri_tt");
@@ -127,6 +129,7 @@ public class CAStage extends Stage {
         buttonAutomatLaden = new Button();
         buttonAutomatLaden.setTooltip(new Tooltip("Automat Laden"));
         buttonAutomatLaden.setGraphic(new ImageView(new Image("Load24.gif")));
+        buttonAutomatLaden.setDisable(true);
         buttonGroesserePopulation = new Button();
         buttonGroesserePopulation.setTooltip(new Tooltip("Population vergroessern"));
         buttonGroesserePopulation.setGraphic(new ImageView(new Image("Size24.gif")));
@@ -141,6 +144,7 @@ public class CAStage extends Stage {
         buttonDrucken = new Button();
         buttonDrucken.setTooltip(new Tooltip("Drucken"));
         buttonDrucken.setGraphic(new ImageView(new Image("Print24.gif")));
+        buttonDrucken.setDisable(true);
         buttonZoomIn = new Button();
         buttonZoomIn.setTooltip(new Tooltip("Zoom In"));
         buttonZoomIn.setGraphic(new ImageView(new Image("ZoomIn24.gif")));
@@ -156,11 +160,11 @@ public class CAStage extends Stage {
         buttonStop = new Button();
         buttonStop.setTooltip(new Tooltip("Stopp"));
         buttonStop.setGraphic(new ImageView(new Image("Stop24.gif")));
-        sliderSchneller = new Slider(0, 100, 0);
+        sliderSchneller = new Slider(50, 1000, 300);
         sliderSchneller.setShowTickLabels(true);
         sliderSchneller.setShowTickMarks(true);
-        sliderSchneller.setMajorTickUnit(50);
-        sliderSchneller.setMinorTickCount(1);
+        sliderSchneller.setMajorTickUnit(100);
+        sliderSchneller.setMinorTickCount(50);
         toolbar.getItems().addAll(buttonNeuerAutomat, buttonAutomatLaden, new Separator(), buttonGroesserePopulation, buttonZustandNull, buttonZufaelligePopulation, buttonTorus, buttonDrucken, new Separator(), buttonZoomIn, buttonZoomOut, new Separator(), buttonStep, buttonStart, buttonStop, new Separator(), sliderSchneller);
 
 

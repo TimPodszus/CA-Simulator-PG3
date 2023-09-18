@@ -71,7 +71,7 @@ public abstract class Automaton extends Observable {
      *
      * @return die Anzahl an Zuständen des Automaten
      */
-    public int getNumberOfStates() {
+    public synchronized int getNumberOfStates() {
         return this.numberOfStates;
 
     }
@@ -81,7 +81,7 @@ public abstract class Automaton extends Observable {
      *
      * @return die Anzahl an Reihen
      */
-    public int getNumberOfRows() {
+    public synchronized int getNumberOfRows() {
         return rows;
     }
 
@@ -90,7 +90,7 @@ public abstract class Automaton extends Observable {
      *
      * @return die Anzahl an Spalten
      */
-    public int getNumberOfColumns() {
+    public synchronized int getNumberOfColumns() {
         return columns;
     }
 
@@ -103,6 +103,7 @@ public abstract class Automaton extends Observable {
      * @param columns die neue Anzahl an Spalten
      */
     public void changeSize(int rows, int columns) {
+        synchronized (this){
         Cell[][] newCells = new Cell[rows][columns];
         for (int r = 0; r < newCells.length; r++) {
             for (int c = 0; c < newCells[r].length; c++) {
@@ -115,7 +116,7 @@ public abstract class Automaton extends Observable {
         }
         this.rows = rows;
         this.columns = columns;
-        this.cells = newCells;
+        this.cells = newCells;}
         notifyObserver();
     }
 
@@ -127,7 +128,7 @@ public abstract class Automaton extends Observable {
      * sonst
      */
 
-    public boolean isTorus() {
+    public synchronized boolean isTorus() {
         return this.isTorus;
     }
 
@@ -137,8 +138,9 @@ public abstract class Automaton extends Observable {
      * @param isTorus true, falls der Automat als Torus betrachtet wird;
      *                false sonst
      */
-    public void setTorus(boolean isTorus) {
-        this.isTorus = isTorus;
+    public void setTorus(boolean isTorus) { //Sonar Lint Disabled Rule S2886
+       synchronized (this){
+        this.isTorus = isTorus;}
         notifyObserver();
     }
 
@@ -150,7 +152,7 @@ public abstract class Automaton extends Observable {
      * @return true, falls der Automat die Moore-Nachbarschaft berücksicht;
      * false, falls er die von-Neumann-Nachbarschaft berücksichtigt
      */
-    public boolean isMooreNeighborHood() {
+    public synchronized boolean isMooreNeighborHood() {
         return isMooreNeighborHood;
     }
 
@@ -158,13 +160,14 @@ public abstract class Automaton extends Observable {
      * setzt alle Zellen in den Zustand 0
      */
     public void clearPopulation() {
-        for (int r = 0; r < this.getNumberOfRows(); r++) {
-            for (int c = 0; c < this.getNumberOfColumns(); c++) {
-                Cell cell = getCell(r, c);
-                cell.setState(0);
+        synchronized (this) {
+            for (int r = 0; r < this.getNumberOfRows(); r++) {
+                for (int c = 0; c < this.getNumberOfColumns(); c++) {
+                    Cell cell = getCell(r, c);
+                    cell.setState(0);
+                }
             }
         }
-
         notifyObserver();
     }
 
@@ -174,13 +177,17 @@ public abstract class Automaton extends Observable {
     Random ran = new Random();
 
     public void randomPopulation() {
+        synchronized (this){
         for (int r = 0; r < this.rows; r++) {
             for (int c = 0; c < this.columns; c++) {
-                this.setState(r, c, ran.nextInt(0, this.numberOfStates));
+                if (this.cells[r][c].getState() != ran.nextInt(0, this.numberOfStates)) {
+                    getCell(r,  c).setState(ran.nextInt(0, this.numberOfStates));
+                }
             }
-        }
+        }}
         notifyObserver();
     }
+
 
     /**
      * Liefert eine Zelle des Automaten
@@ -189,7 +196,7 @@ public abstract class Automaton extends Observable {
      * @param column Spalte der Zelle
      * @return Cell-Objekt an Position row/column
      */
-    public Cell getCell(int row, int column) {
+    public synchronized Cell getCell(int row, int column) {
         return cells[row][column];
     }
 
@@ -201,9 +208,10 @@ public abstract class Automaton extends Observable {
      * @param state  neuer Zustand der Zelle
      */
     public void setState(int row, int column, int state) {
+      synchronized (this){
         if (this.cells[row][column].getState() != state) {
             getCell(row, column).setState(state);
-        }
+        }}
         notifyObserver();
     }
 
@@ -218,12 +226,13 @@ public abstract class Automaton extends Observable {
      */
     public void setState(int fromRow, int fromColumn, int toRow,
                          int toColumn, int state) {
+        synchronized (this){
         for (int r = fromRow; r <= toRow; r++) {
             for (int c = fromColumn; c <= toColumn; c++) {
                 Cell cell = getCell(r, c);
                 cell.setState(state);
             }
-        }
+        }}
         notifyObserver();
 
     }
@@ -237,6 +246,7 @@ public abstract class Automaton extends Observable {
      *
      */
     public void nextGeneration() {
+        synchronized (this){
         Cell[][] nextGeneration = new Cell[rows][columns];
 
         for (int r = 0; r < this.rows; r++) {
@@ -247,7 +257,7 @@ public abstract class Automaton extends Observable {
             }
         }
 
-        this.cells = nextGeneration;
+        this.cells = nextGeneration;}
         notifyObserver();
     }
 
@@ -267,36 +277,49 @@ public abstract class Automaton extends Observable {
         }
     }
 
-    private Cell[] getNeumannNeighbors( int r, int c) {
+    private Cell[] getNeumannNeighbors(int r, int c) {
         ArrayList<Cell> neumannNeighbor = new ArrayList<>();
-        int[] dr = {-1, 0, 0, 1,};
-        int[] dc = {0, -1, -1, 0,};
+        int[] dr = {-1, 0, 0, 1};
+        int[] dc = {0, -1, 1, 0};
         for (int i = 0; i < 4; i++) {
-            if (checkValidNeighbors(dr, dc, i)) {
-                neumannNeighbor.add(new Cell(getCell(r + dr[i], c + dc[i])));
+            int nr = r + dr[i];
+            int nc = c + dc[i];
+            if (isValidCell(nr, nc, getNumberOfRows(),getNumberOfColumns())) {
+                neumannNeighbor.add(new Cell(getCell(nr, nc)));
             }
         }
         return neumannNeighbor.toArray(new Cell[0]);
     }
 
+    private boolean isValidCell(int r, int c, int numRows, int numCols) {
+        return r >= 0 && r < numRows && c >= 0 && c < numCols;
+    }
 
-    private Cell[] getMooreNeighbors( int r, int c) {
+
+
+
+
+    private Cell[] getMooreNeighbors(int r, int c) {
         ArrayList<Cell> mooreNeighbor = new ArrayList<>();
-        //Lösungsansatz per deltarow(dr) und deltacolumn(dc) Array in Zusammenarbeit mit Anton Neumann
         int[] dr = {-1, -1, -1, 0, 0, 1, 1, 1};
-        int[] dc = {-1, 0, 1, -1, 1, -1, 0, 1,};
+        int[] dc = {-1, 0, 1, -1, 1, -1, 0, 1};
+
         for (int i = 0; i < 8; i++) {
-            if ((r + dr[i]) >= 0 && (r + dr[i]) <= (getNumberOfRows() - 1) && (c + dc[i]) >= 0 && (c + dc[i]) <= (getNumberOfColumns() - 1)) {
-                mooreNeighbor.add(new Cell(getCell(r + dr[i], c + dc[i])));
+            int nr = r + dr[i];
+            int nc = c + dc[i];
+
+            if (isValidCell(nr, nc, getNumberOfRows(), getNumberOfColumns())) {
+                mooreNeighbor.add(new Cell(getCell(nr, nc)));
             }
         }
+
         return mooreNeighbor.toArray(new Cell[0]);
     }
 
     private Cell[] getTorusNeumannNeighbors( int r, int c) {
         ArrayList<Cell> torusNeumannNeighbor = new ArrayList<>();
         int[] dr = {-1, 0, 0, 1,};
-        int[] dc = {0, -1, -1, 0,};
+        int[] dc = {0, -1, 1, 0,};
         for (int i = 0; i < 4; i++) {
             torusNeumannNeighbor.add(new Cell(getCell((r + dr[i] + getNumberOfRows()) % getNumberOfRows(), (c + dc[i] + getNumberOfColumns()) % getNumberOfColumns())));
         }
@@ -313,14 +336,8 @@ public abstract class Automaton extends Observable {
         return torusMooreNeighbors.toArray(new Cell[0]);
     }
 
-    private boolean checkValidNeighbors(int[] dr, int[] dc, int i) {
-        return (this.rows + dr[i]) >= 0 && (this.rows + dr[i]) <= getNumberOfRows() && (this.columns + dc[i]) >= 0 && (this.columns + dc[i]) <= getNumberOfColumns();
-
-
-    }
-
     @Override
-    public boolean equals(Object o) {
+    public synchronized boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
@@ -329,7 +346,7 @@ public abstract class Automaton extends Observable {
     }
 
     @Override
-    public int hashCode() {
+    public synchronized int hashCode() {
         int result = Objects.hash(super.hashCode(), rows, columns, numberOfStates, isMooreNeighborHood, isTorus, ran);
         result = 31 * result + Arrays.deepHashCode(cells);
         return result;

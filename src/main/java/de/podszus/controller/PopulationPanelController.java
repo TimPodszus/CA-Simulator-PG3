@@ -41,7 +41,7 @@ public class PopulationPanelController {
     }
 
     void checkZoomButtonStage(){
-        if (populationsPanel.getCellWidth() > 50){
+        if (populationsPanel.getCellWidth() > 30){
             stage.getItemZoomIn().setDisable(true);
             stage.getButtonZoomIn().setDisable(true);
         }
@@ -53,7 +53,7 @@ public class PopulationPanelController {
             stage.getItemZoomOut().setDisable(false);
             stage.getButtonZoomOut().setDisable(false);
         }
-        if (populationsPanel.getCellWidth() < 50){
+        if (populationsPanel.getCellWidth() < 30){
             stage.getItemZoomIn().setDisable(false);
             stage.getButtonZoomIn().setDisable(false);
         }

@@ -3,6 +3,7 @@ package de.podszus.view;
 import de.podszus.model.Automaton;
 import de.podszus.model.Cell;
 import de.podszus.util.Observer;
+import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
@@ -14,10 +15,10 @@ public class PopulationsPanel extends Region implements Observer {
 
     private final Automaton automaton;
     public final Canvas canvas;
-    private double width = 30;
+    private double width = 15;
 
 
-    private double lineWidth = 2;
+    private double lineWidth = 1;
 
     private final HBox[] colorPickerPanels;
 
@@ -68,7 +69,13 @@ public class PopulationsPanel extends Region implements Observer {
 
     @Override
     public void update() {
-        paintCanvas();
+        if (Platform.isFxApplicationThread()){
+            paintCanvas();
+        }
+        else{
+            Platform.runLater(this::paintCanvas);
+        }
+
     }
 
     public double getLineWidth() {

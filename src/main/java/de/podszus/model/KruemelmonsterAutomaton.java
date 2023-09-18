@@ -14,7 +14,7 @@ public class KruemelmonsterAutomaton extends Automaton {
         for (Cell neighbor : neighbors) {
             int neighborState = neighbor.getState();
 
-            if (neighborState == 0 && cellState == Integer.MAX_VALUE) {
+            if (neighborState == 0 && cellState+1 == getNumberOfStates()) {
                 outputCell.setState(0);
                 return outputCell;
             }
@@ -23,8 +23,8 @@ public class KruemelmonsterAutomaton extends Automaton {
                 outputCell.setState(cellState + 1);
                 return outputCell;
             }
-        }
 
+        }
         return outputCell;
     }
 
