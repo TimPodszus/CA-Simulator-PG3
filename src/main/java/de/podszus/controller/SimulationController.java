@@ -23,9 +23,14 @@ public class SimulationController {
         slider.valueProperty().addListener((obs,o,n )-> speed = n.intValue());
         caStage.getButtonStart().setOnAction(e -> startSimulation());
         caStage.getButtonStop().setOnAction(e-> stopSimulation());
+        caStage.getItemStopp().setOnAction(e-> stopSimulation());
+        caStage.getItemStart().setOnAction(e-> startSimulation());
     }
 
-
+    /** Der Block
+     * try {synchronized (this){wait(speed);}
+     * ist Quelle ChatGPT um eine Fehlermeldung zu vermeiden
+     */
     class SimulationThread extends Thread {
 
         @Override
@@ -34,12 +39,12 @@ public class SimulationController {
             while (!isInterrupted()) {
 
                 automaton.nextGeneration();
-                //Quelle: ChatGPT
                 try {
                     synchronized (this){
                     wait(speed);}
                 } catch (InterruptedException e) {
                     simThread.interrupt();
+
                 }
 
             }
@@ -47,13 +52,35 @@ public class SimulationController {
     }
 
     private void startSimulation() {
+        disableStartButtons();
         simThread = new SimulationThread();
         simThread.setDaemon(true);
         simThread.start();
     }
 
     private void stopSimulation() {
+        disableStopButtons();
         simThread.interrupt();
+    }
+
+    private void disableStartButtons(){
+        caStage.getButtonStop().setDisable(false);
+        caStage.getItemStopp().setDisable(false);
+        caStage.getButtonStep().setDisable(true);
+        caStage.getItemSchritt().setDisable(true);
+        caStage.getButtonStart().setDisable(true);
+        caStage.getItemStopp().setDisable(true);
+
+    }
+    private void disableStopButtons(){
+        caStage.getButtonStop().setDisable(true);
+        caStage.getItemStopp().setDisable(true);
+        caStage.getButtonStep().setDisable(false);
+        caStage.getItemSchritt().setDisable(false);
+        caStage.getButtonStart().setDisable(false);
+        caStage.getItemStopp().setDisable(false);
+
+
     }
 
 }

@@ -18,12 +18,12 @@ public class CAStageController {
         this.automaton = automaton;
         stage.getItemNeu().setOnAction(e -> CAMain.newGame());
         stage.getItemBeenden().setOnAction(e -> Platform.exit());
-        stage.getItemGroesseAendern().setOnAction(e -> {
+        stage.getItemChangeSize().setOnAction(e -> {
             PopulationChangeBox changeBox = new PopulationChangeBox(automaton);
             automaton.changeSize(changeBox.getRowsOutput(), changeBox.getColumnsOutput());
             populationsPanel.update();
         });
-        stage.getItemLoeschen().setOnAction(e -> {
+        stage.getItemDelete().setOnAction(e -> {
             automaton.clearPopulation();
             populationsPanel.update();
         });
@@ -36,7 +36,7 @@ public class CAStageController {
             stage.getButtonTorus().setSelected(!stage.getButtonTorus().isSelected());
         });
         stage.getButtonNeuerAutomat().setOnAction(e -> CAMain.newGame());
-        stage.getButtonGroesserePopulation().setOnAction(e -> {
+        stage.getButtonBiggerPopulation().setOnAction(e -> {
             PopulationChangeBox changeBox = new PopulationChangeBox(automaton);
             automaton.changeSize(changeBox.getRowsOutput(), changeBox.getColumnsOutput());
             populationsPanel.update();
@@ -45,7 +45,7 @@ public class CAStageController {
             automaton.clearPopulation();
             populationsPanel.update();
         });
-        stage.getButtonZufaelligePopulation().setOnAction(e -> {
+        stage.getButtonRandomPopulation().setOnAction(e -> {
             automaton.randomPopulation();
             populationsPanel.update();
         });

@@ -11,21 +11,21 @@ public class GameOfLifeAutomaton extends Automaton { //Regel Java S110 disabled
 
     }
     protected Cell transform(Cell cell, Cell[] neighbors){
-        int livingneighbors = 0;
+        int livingNeighbors = 0;
         Cell outputCell = new Cell(cell);
         for (Cell neighbor : neighbors) {
             if (neighbor.getState() == 1) {
-                livingneighbors++;
+                livingNeighbors++;
             }
 
         }
 
         if (cell.getState() ==1 ){
-            if (livingneighbors < 2 || livingneighbors > 3 ){
+            if (livingNeighbors < 2 || livingNeighbors > 3 ){
 
                 outputCell.setState(0);
             }
-        } else if (cell.getState() == 0 && (livingneighbors == 3 )){
+        } else if (cell.getState() == 0 && (livingNeighbors == 3 )){
                 outputCell.setState(1);
 
 

@@ -88,6 +88,10 @@ public class PopulationPanelController {
 
         double endX = event.getX();
         double endY = event.getY();
+        if (startX < populationsPanel.getLineWidth() || startY < populationsPanel.getLineWidth() || startX > populationsPanel.getLineWidth() + automaton.getNumberOfRows() * populationsPanel.getCellWidth() || startY > populationsPanel.getLineWidth() + automaton.getNumberOfColumns() * populationsPanel.getCellWidth()) {
+            return;
+        }
+
         if (endX < populationsPanel.getLineWidth() || endY < populationsPanel.getLineWidth() || endX > populationsPanel.getLineWidth() + automaton.getNumberOfRows() * populationsPanel.getCellWidth() || endY > populationsPanel.getLineWidth() + automaton.getNumberOfColumns() * populationsPanel.getCellWidth()) {
             return;
         }
@@ -99,21 +103,21 @@ public class PopulationPanelController {
             endY = populationsPanel.getLineWidth() + automaton.getNumberOfRows() * populationsPanel.getCellWidth() - 1;
         }
 
-        int startcolumn = (int) ((startX - populationsPanel.getLineWidth()) / (populationsPanel.getCellWidth() + populationsPanel.getLineWidth()));
-        int startrow = (int) ((startY - populationsPanel.getLineWidth()) / (populationsPanel.getCellWidth() + populationsPanel.getLineWidth()));
-        int endcolumn = (int) ((endX - populationsPanel.getLineWidth()) / (populationsPanel.getCellWidth() + populationsPanel.getLineWidth()));
-        int endrow = (int) ((endY - populationsPanel.getLineWidth()) / (populationsPanel.getCellWidth() + populationsPanel.getLineWidth()));
-        if (endcolumn < startcolumn) {
-            int x = startcolumn;
-            startcolumn = endcolumn;
-            endcolumn = x;
+        int startColumn = (int) ((startX - populationsPanel.getLineWidth()) / (populationsPanel.getCellWidth() + populationsPanel.getLineWidth()));
+        int startRow = (int) ((startY - populationsPanel.getLineWidth()) / (populationsPanel.getCellWidth() + populationsPanel.getLineWidth()));
+        int endColumn = (int) ((endX - populationsPanel.getLineWidth()) / (populationsPanel.getCellWidth() + populationsPanel.getLineWidth()));
+        int endRow = (int) ((endY - populationsPanel.getLineWidth()) / (populationsPanel.getCellWidth() + populationsPanel.getLineWidth()));
+        if (endColumn < startColumn) {
+            int x = startColumn;
+            startColumn = endColumn;
+            endColumn = x;
         }
-        if (endrow < startrow) {
-            int x = startrow;
-            startrow = endrow;
-            endrow = x;
+        if (endRow < startRow) {
+            int x = startRow;
+            startRow = endRow;
+            endRow = x;
         }
-        automaton.setState(startrow, startcolumn, endrow, endcolumn, checkedRadioButton);
+        automaton.setState(startRow, startColumn, endRow, endColumn, checkedRadioButton);
 
         populationsPanel.update();
 

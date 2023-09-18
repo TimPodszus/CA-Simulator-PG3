@@ -54,9 +54,9 @@ public abstract class Automaton extends Observable {
      * Implementierung der Transformationsregel
      *
      * @param cell      die betroffene Zelle (darf nicht verändert
-     *                  werden!!!)
+     *                  werden!)
      * @param neighbors die Nachbarn der betroffenen Zelle (dürfen nicht
-     *                  verändert werden!!!)
+     *                  verändert werden!)
      * @return eine neu erzeugte Zelle, die gemäß der
      * Transformationsregel aus der
      * betroffenen Zelle hervorgeht
@@ -147,9 +147,9 @@ public abstract class Automaton extends Observable {
     /**
      * Liefert Informationen über die Nachbarschaft-Eigenschaft des
      * Automaten
-     * (Hinweis: Die Nachbarschaftseigenschaft kann nicht verändert werden)
+     * (Hinweis: Die Nachbarschafts eigenschaft kann nicht verändert werden)
      *
-     * @return true, falls der Automat die Moore-Nachbarschaft berücksicht;
+     * @return true, falls der Automat die Moore-Nachbarschaft berücksichtigt;
      * false, falls er die von-Neumann-Nachbarschaft berücksichtigt
      */
     public synchronized boolean isMooreNeighborHood() {
@@ -194,14 +194,14 @@ public abstract class Automaton extends Observable {
      *
      * @param row    Reihe der Zelle
      * @param column Spalte der Zelle
-     * @return Cell-Objekt an Position row/column
+     * @return Cell-Objekt Position row/column
      */
     public synchronized Cell getCell(int row, int column) {
         return cells[row][column];
     }
 
     /**
-     * Aendert den Zustand einer Zelle
+     * Ändert den Zustand einer Zelle
      *
      * @param row    Reihe der Zelle
      * @param column Spalte der Zelle
@@ -216,7 +216,7 @@ public abstract class Automaton extends Observable {
     }
 
     /**
-     * Aendert den Zustand eines ganzen Bereichs von Zellen
+     * Ändert den Zustand eines ganzen Bereichs von Zellen
      *
      * @param fromRow    Reihe der obersten Zelle
      * @param fromColumn Spalte der obersten Zelle
@@ -240,7 +240,7 @@ public abstract class Automaton extends Observable {
     /**
      * überführt den Automaten in die nächste Generation; ruft dabei die
      * abstrakte Methode "transform" für alle Zellen auf; Hinweis: zu
-     * berücksichtigen sind die Nachbarschaftseigenschaft und die
+     * berücksichtigen sind die Nachbarschafts eigenschaft und die
      * Torus-Eigenschaft des Automaten
      *
      *
