@@ -216,11 +216,11 @@ public class CAStage extends Stage {
 
     }
 
+
+
     public MenuItem getItemNeu() {
         return itemNeu;
     }
-
-
 
     public MenuItem getItemBeenden() {
         return itemBeenden;
@@ -250,13 +250,6 @@ public class CAStage extends Stage {
         return itemZoomOut;
     }
 
-
-
-
-
-
-
-
     public MenuItem getItemSchritt() {
         return itemSchritt;
     }
@@ -273,8 +266,6 @@ public class CAStage extends Stage {
         return buttonNeuerAutomat;
     }
 
-
-
     public Button getButtonGroesserePopulation() {
         return buttonGroesserePopulation;
     }
@@ -283,15 +274,11 @@ public class CAStage extends Stage {
         return buttonZustandNull;
     }
 
-    public Button getButtonZufaelligePopulation() {
-        return buttonZufaelligePopulation;
-    }
+    public Button getButtonZufaelligePopulation() {return buttonZufaelligePopulation;}
 
     public ToggleButton getButtonTorus() {
         return buttonTorus;
     }
-
-
 
     public Button getButtonZoomIn() {
         return buttonZoomIn;

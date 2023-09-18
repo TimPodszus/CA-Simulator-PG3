@@ -60,10 +60,10 @@ public abstract class Automaton extends Observable {
      * @return eine neu erzeugte Zelle, die gemäß der
      * Transformationsregel aus der
      * betroffenen Zelle hervorgeht
-     * @throws Throwable moeglicherweise wirft die Methode eine Exception
+     *
      */
-    protected abstract Cell transform(Cell cell, Cell[] neighbors)
-            throws Throwable;
+    protected abstract Cell transform(Cell cell, Cell[] neighbors);
+
 
     /**
      * Liefert die Anzahl an Zuständen des Automaten; gültige Zustände sind
@@ -109,7 +109,7 @@ public abstract class Automaton extends Observable {
                 if (r < this.rows && c < this.columns) {
                     newCells[r][c] = cells[r][c];
                 } else {
-                    newCells[r][c] = new Cell(0);
+                    newCells[r][c] = new Cell();
                 }
             }
         }
@@ -234,10 +234,9 @@ public abstract class Automaton extends Observable {
      * berücksichtigen sind die Nachbarschaftseigenschaft und die
      * Torus-Eigenschaft des Automaten
      *
-     * @throws Throwable Exceptions der transform-Methode werden
-     *                   weitergeleitet
+     *
      */
-    public void nextGeneration() throws Throwable {
+    public void nextGeneration() {
         Cell[][] nextGeneration = new Cell[rows][columns];
 
         for (int r = 0; r < this.rows; r++) {
@@ -253,14 +252,14 @@ public abstract class Automaton extends Observable {
     }
 
     private Cell[] getNeighbors( int row, int col) {
-        if (this.isTorus) {
-            if (this.isMooreNeighborHood) {
+        if (this.isTorus()) {
+            if (this.isMooreNeighborHood()) {
                 return getTorusMooreNeighbors( row, col);
             } else {
                 return getTorusNeumannNeighbors(row, col);
             }
         } else {
-            if (this.isMooreNeighborHood) {
+            if (this.isMooreNeighborHood()) {
                 return getMooreNeighbors(row, col);
             } else {
                 return getNeumannNeighbors( row, col);
