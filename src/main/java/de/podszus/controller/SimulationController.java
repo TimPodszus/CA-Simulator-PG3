@@ -69,7 +69,7 @@ public class SimulationController {
         caStage.getButtonStep().setDisable(true);
         caStage.getItemSchritt().setDisable(true);
         caStage.getButtonStart().setDisable(true);
-        caStage.getItemStopp().setDisable(true);
+        caStage.getItemStart().setDisable(true);
 
     }
     private void disableStopButtons(){
@@ -78,7 +78,7 @@ public class SimulationController {
         caStage.getButtonStep().setDisable(false);
         caStage.getItemSchritt().setDisable(false);
         caStage.getButtonStart().setDisable(false);
-        caStage.getItemStopp().setDisable(false);
+        caStage.getItemStart().setDisable(false);
 
 
     }

@@ -47,7 +47,7 @@ public class Cell   {
      *
      * @param state der neue Zustand der Zelle
      */
-    public void setState(int state) {
+     void setState(int state) {
         this.state = state;
     }
 }

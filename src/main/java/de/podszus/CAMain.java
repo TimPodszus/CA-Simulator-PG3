@@ -37,4 +37,16 @@ public class CAMain extends Application {
         statePanelController = new StatePanelController(caStage);
         caStage.show();
     }
-}
+
+    public static void newGame(Automaton automaton1) {
+        automaton1.randomPopulation();
+        CAStage caStage = new CAStage(automaton1);
+        caStageController = new CAStageController(automaton1, caStage);
+        simulationController = new SimulationController(automaton1,caStage);
+        populationPanelController = new PopulationPanelController(automaton1, caStage);
+        statePanelController = new StatePanelController(caStage);
+        caStage.show();
+
+
+
+}}

@@ -69,10 +69,9 @@ public class PopulationsPanel extends Region implements Observer {
 
     @Override
     public void update() {
-        if (Platform.isFxApplicationThread()){
+        if (Platform.isFxApplicationThread()) {
             paintCanvas();
-        }
-        else{
+        } else {
             Platform.runLater(this::paintCanvas);
         }
 
@@ -85,7 +84,6 @@ public class PopulationsPanel extends Region implements Observer {
     public HBox[] getColorPickerPanels() {
         return colorPickerPanels;
     }
-
 
 
     public void setCellWidth(double width) {

@@ -67,13 +67,14 @@ public class PopulationPanelController {
         double y = event.getY();
         startX = x;
         startY = y;
-        if (x < populationsPanel.getLineWidth() || y < populationsPanel.getLineWidth() || x > populationsPanel.getLineWidth() + automaton.getNumberOfRows() * populationsPanel.getCellWidth() || y > populationsPanel.getLineWidth() + automaton.getNumberOfColumns() * populationsPanel.getCellWidth()) {
-            return;
-        }
+        if (x < populationsPanel.getLineWidth() || y < populationsPanel.getLineWidth() || x > populationsPanel.getLineWidth() * automaton.getNumberOfRows() + automaton.getNumberOfRows() * populationsPanel.getCellWidth() || y > populationsPanel.getLineWidth() * automaton.getNumberOfColumns() + automaton.getNumberOfColumns() * populationsPanel.getCellWidth()) {
+          return;
+       }
+
         int column = (int) ((x - populationsPanel.getLineWidth()) / (populationsPanel.getCellWidth() + populationsPanel.getLineWidth()));
         int row = (int) ((y - populationsPanel.getLineWidth()) / (populationsPanel.getCellWidth() + populationsPanel.getLineWidth()));
 
-        automaton.getCell(row, column).setState(checkedRadioButton);
+        automaton.setState(row,column,checkedRadioButton);
         populationsPanel.update();
 
 
@@ -88,9 +89,10 @@ public class PopulationPanelController {
 
         double endX = event.getX();
         double endY = event.getY();
-        if (startX < populationsPanel.getLineWidth() || startY < populationsPanel.getLineWidth() || startX > populationsPanel.getLineWidth() + automaton.getNumberOfRows() * populationsPanel.getCellWidth() || startY > populationsPanel.getLineWidth() + automaton.getNumberOfColumns() * populationsPanel.getCellWidth()) {
+        if (startX < populationsPanel.getLineWidth() || startY < populationsPanel.getLineWidth() || startX > populationsPanel.getLineWidth() * automaton.getNumberOfRows() + automaton.getNumberOfRows() * populationsPanel.getCellWidth() || startY > populationsPanel.getLineWidth() * automaton.getNumberOfColumns()+ automaton.getNumberOfColumns() * populationsPanel.getCellWidth()) {
             return;
         }
+
 
         if (endX < populationsPanel.getLineWidth() || endY < populationsPanel.getLineWidth() || endX > populationsPanel.getLineWidth() + automaton.getNumberOfRows() * populationsPanel.getCellWidth() || endY > populationsPanel.getLineWidth() + automaton.getNumberOfColumns() * populationsPanel.getCellWidth()) {
             return;
