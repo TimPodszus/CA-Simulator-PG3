@@ -214,7 +214,7 @@ public class CAStage extends Stage {
         meldungsLabel.setMaxHeight(30);
 
         hauptbox.getChildren().addAll(menuBar, toolbar, innereBox, meldungsLabel);
-        this.setTitle("CAS-Simulator");
+        this.setTitle("CA-Simulator");
         this.setScene(new Scene(hauptbox, 1280, 720));
 
 

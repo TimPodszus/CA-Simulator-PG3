@@ -19,14 +19,19 @@ public class CAStageController {
     Automaton automaton;
     PopulationsPanel populationsPanel;
     CAStage stage;
+    SimulationController simulationController;
 
-    public CAStageController(Automaton automaton, CAStage stage) {
+    public CAStageController(Automaton automaton, CAStage stage, SimulationController simulationController) {
         this.stage = stage;
+        this.simulationController = simulationController;
         this.populationsPanel = stage.getPopulationsPanel();
         this.automaton = automaton;
         stage.getButtonNeuerAutomat().setOnAction(e-> openAutomaton());
         stage.getItemNeu().setOnAction(e -> openAutomaton());
-        stage.getItemBeenden().setOnAction(e -> this.stage.close());
+        stage.getItemBeenden().setOnAction(e -> {
+            this.stage.close();
+            simulationController.simThread.interrupt();
+        });
         stage.getItemChangeSize().setOnAction(e -> {
             PopulationChangeBox changeBox = new PopulationChangeBox(automaton);
             automaton.changeSize(changeBox.getRowsOutput(), changeBox.getColumnsOutput());
@@ -78,20 +83,6 @@ public class CAStageController {
 
     }
 
-    public static String getResourcesDir() {
-        try {
-            final String pkgName = CAStage.class.getPackageName();
-            final String pkgPath = pkgName.replace('.', '/');
-            final URI pkg = Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(pkgPath)).toURI();
-            if (pkg.toString().startsWith("jar:")) {
-                return "/resources/";
-            }
-        } catch (Exception exc) {
-            // ignore
-        }
-        return "";
-    }
-
 
     private static void openAutomaton(){
         List<Class<?>> classes = getClassesForPackage("de.podszus");
@@ -141,7 +132,7 @@ public class CAStageController {
             final String pkgPath = pkgName.replace('.', '/');
             final URI pkg = Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(pkgPath)).toURI();
             final ArrayList<Class<?>> allClasses = new ArrayList<>();
-            Path root;
+            Path root ;
             if (pkg.toString().startsWith("jar:")) {
                 rootFS = FileSystems.newFileSystem(pkg, Collections.emptyMap());
                 root = rootFS.getPath(pkgPath);
